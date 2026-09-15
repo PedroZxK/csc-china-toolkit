@@ -17,12 +17,6 @@ Conjunto de ferramentas web (HTML/CSS/JS puro, sem dependências de build) feita
 
 São páginas estáticas — basta abrir qualquer `index.html` direto no navegador, sem precisar de servidor ou build.
 
-## Publicando com GitHub Pages
-
-1. Faça o push deste repositório para o GitHub.
-2. Em **Settings → Pages**, selecione a branch `main` e a pasta raiz (`/`).
-3. O site fica disponível em `https://<seu-usuario>.github.io/<nome-do-repo>/`.
-
 ## Aviso
 
 Todo o conteúdo (questões, exemplos e textos) é original, criado para fins de estudo pessoal — não reproduz provas oficiais nem material protegido por direitos autorais.

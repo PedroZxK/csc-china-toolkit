@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSC China Toolkit</title>
+<meta name="description" content="Conjunto de ferramentas para estudar mandarim e se preparar para a Bolsa do Governo Chinês (CSC): simulados de HSK, gramática, fórmulas do CSCA e mais.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#f4f3ef; --surface:#ffffff; --surface-2:#eae7e0; --ink:#1d201d; --ink-soft:#5c625b; --line:#ddd8cd;
+    --accent:#2c4a6e; --accent-soft:#dde6ee; --accent-ink:#1c3350;
+    --font-display:"Fraunces", Georgia, serif;
+    --font-body:"Source Sans 3", -apple-system, sans-serif;
+    --font-mono:"IBM Plex Mono", ui-monospace, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#17171a; --surface:#1f1f22; --surface-2:#262629; --ink:#e8e7e2; --ink-soft:#9d9c96; --line:#2e2e31;
+      --accent:#8fb6dd; --accent-soft:#213142; --accent-ink:#cfe2f4;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#17171a; --surface:#1f1f22; --surface-2:#262629; --ink:#e8e7e2; --ink-soft:#9d9c96; --line:#2e2e31;
+    --accent:#8fb6dd; --accent-soft:#213142; --accent-ink:#cfe2f4;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--paper); color:var(--ink); font-family:var(--font-body); line-height:1.55; -webkit-font-smoothing:antialiased;}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+  a{color:inherit;}
+  .wrap{max-width:840px; margin:0 auto; padding:64px 20px 56px;}
+
+  .eyebrow{font-family:var(--font-mono); font-size:.72rem; letter-spacing:.09em; text-transform:uppercase; color:var(--accent-ink); display:flex; align-items:center; gap:8px; margin-bottom:14px;}
+  .eyebrow::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--accent); flex:none;}
+  h1{font-family:var(--font-display); font-weight:700; font-size:2.4rem; letter-spacing:-.01em; margin:0 0 14px; text-wrap:balance;}
+  p.lede{color:var(--ink-soft); max-width:62ch; margin:0 0 40px; font-size:1.08rem; line-height:1.6;}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px;}
+  .card{display:flex; flex-direction:column; gap:8px; text-decoration:none; color:var(--ink); background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:10px; padding:20px; transition:border-color .12s ease, transform .12s ease;}
+  .card:hover{border-color:var(--accent); transform:translateY(-1px);}
+  .card h3{font-family:var(--font-display); font-weight:600; font-size:1.15rem; margin:0;}
+  .card p{margin:0; color:var(--ink-soft); font-size:.92rem; line-height:1.5;}
+  .card .go{margin-top:2px; font-family:var(--font-mono); font-size:.72rem; font-weight:600; color:var(--accent-ink); letter-spacing:.03em;}
+
+  footer{margin-top:52px; padding-top:24px; border-top:1px solid var(--line); color:var(--ink-soft); font-size:.85rem; line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Ferramentas de estudo · rumo à China</div>
+  <h1>CSC China Toolkit</h1>
+  <p class="lede">Seis ferramentas construídas para me preparar para a Bolsa do Governo Chinês (CSC), com o objetivo de cursar Bacharelado em TI/Ciências da Computação na China — HSK, CSCA, entrevista e organização de documentos, seja indo direto para o Bacharelado ou passando antes por um curso de imersão em chinês.</p>
+  <div class="grid">
+    <a class="card" href="simulado-hsk/">
+      <h3>Simulado HSK</h3>
+      <p>Simulador de provas HSK 1-6, com a mesma estrutura e quantidade oficial de questões (481 no total).</p>
+      <span class="go">Abrir →</span>
+    </a>
+    <a class="card" href="mapa-gramatical-hsk/">
+      <h3>Mapa Gramatical HSK</h3>
+      <p>Guia de referência com todas as estruturas gramaticais do HSK 1 ao 5.</p>
+      <span class="go">Abrir →</span>
+    </a>
+    <a class="card" href="formulas-csca/">
+      <h3>Fórmulas do CSCA</h3>
+      <p>Revisão de matemática e física organizada pelos tópicos oficiais do exame CSCA.</p>
+      <span class="go">Abrir →</span>
+    </a>
+    <a class="card" href="roteiro-2min/">
+      <h3>Roteiro de 2 Minutos</h3>
+      <p>Estrutura fixa com frases prontas em chinês pra treinar descrição de imagens em voz alta.</p>
+      <span class="go">Abrir →</span>
+    </a>
+    <a class="card" href="rotina-estudos/">
+      <h3>Rotina Até a China</h3>
+      <p>Plano de estudos por fase, do HSK4 até a entrevista.</p>
+      <span class="go">Abrir →</span>
+    </a>
+    <a class="card" href="checklist-bolsa-csc/">
+      <h3>Checklist Bolsa CSC</h3>
+      <p>Checklist interativo de documentos e prazos pra candidatura da bolsa.</p>
+      <span class="go">Abrir →</span>
+    </a>
+  </div>
+  <footer>Projeto pessoal de estudo — conteúdo original, não reproduz material oficial protegido por direitos autorais.</footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checklist Bolsa CSC · CSC China Toolkit</title>
+<meta name="description" content="Checklist interativo dos documentos e prazos da candidatura à Bolsa do Governo Chinês (CSC), com progresso salvo no navegador.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#f4f3ef;
+    --surface:#ffffff;
+    --surface-2:#eae7e0;
+    --ink:#1d201d;
+    --ink-muted:#5c625b;
+    --line:#ddd8cd;
+    --jade:#2f6f62;
+    --jade-soft:#dfeae6;
+    --jade-ink:#173b33;
+    --seal:#b13a2e;
+    --seal-soft:#f4ddd8;
+    --seal-ink:#5e1c15;
+    --focus:#2f6f62;
+    --shadow: 0 1px 2px rgba(29,36,34,.06), 0 8px 24px -12px rgba(29,36,34,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#17171a;
+      --surface:#1f1f22;
+      --surface-2:#262629;
+      --ink:#e8e7e2;
+      --ink-muted:#9d9c96;
+      --line:#2e2e31;
+      --jade:#6cbba8;
+      --jade-soft:#1d3833;
+      --jade-ink:#bfe9de;
+      --seal:#e08575;
+      --seal-soft:#3a211f;
+      --seal-ink:#f4c9c1;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#17171a;
+    --surface:#1f1f22;
+    --surface-2:#262629;
+    --ink:#e8e7e2;
+    --ink-muted:#9d9c96;
+    --line:#2e2e31;
+    --jade:#6cbba8;
+    --jade-soft:#1d3833;
+    --jade-ink:#bfe9de;
+    --seal:#e08575;
+    --seal-soft:#3a211f;
+    --seal-ink:#f4c9c1;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Source Sans 3', system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 0 0 80px;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--jade-ink); text-decoration-color: var(--jade); text-underline-offset:2px;}
+  h1,h2,h3{font-family:'Fraunces', Georgia, serif; text-wrap:balance; margin:0; font-weight:600;}
+  .tabnum{font-variant-numeric: tabular-nums;}
+  .mono{font-family:'IBM Plex Mono', ui-monospace, monospace;}
+  .toolkit-nav{background:var(--surface); border-bottom:1px solid var(--line);}
+  .toolkit-nav-inner{max-width:820px; margin:0 auto; padding:13px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .toolkit-brand{font-size:.78rem; font-weight:700; letter-spacing:.03em; color:var(--ink-muted); text-decoration:none;}
+  .toolkit-brand:hover{color:var(--ink);}
+  .toolkit-current{font-family:'IBM Plex Mono',monospace; font-size:.7rem; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-muted);}
+
+  .wrap{max-width:760px; margin:0 auto; padding:28px 16px 0; display:flex; flex-direction:column; gap:22px;}
+
+  /* ---- Masthead ---- */
+  .masthead{display:flex; flex-direction:column; gap:6px; padding-top:4px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--jade-ink); display:flex; align-items:center; gap:8px;
+  }
+  .eyebrow::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--jade); flex:none;}
+  h1{font-size:clamp(28px,5vw,38px); line-height:1.08;}
+  .sub{color:var(--ink-muted); font-size:15px; max-width:60ch; line-height:1.55;}
+
+  /* ---- Urgent banner ---- */
+  .banner{
+    background:var(--seal-soft); border:1px solid color-mix(in srgb, var(--seal) 35%, var(--line));
+    border-radius:10px; padding:18px 20px; display:flex; flex-direction:column; gap:10px;
+    box-shadow:var(--shadow);
+  }
+  .banner-top{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .banner-title{font-family:'Fraunces', serif; font-weight:600; font-size:18px; color:var(--seal-ink);}
+  .banner-dates{display:flex; gap:18px; flex-wrap:wrap;}
+  .bd{display:flex; flex-direction:column; gap:1px;}
+  .bd .lbl{font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--seal-ink); opacity:.75;}
+  .bd .val{font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:15px; color:var(--seal-ink);}
+  .banner p{margin:0; font-size:14px; line-height:1.55; color:var(--seal-ink);}
+  .banner strong{color:var(--seal-ink);}
+
+  /* ---- Now-do card ---- */
+  .now{
+    background:var(--jade-soft); border:1px solid color-mix(in srgb, var(--jade) 30%, var(--line));
+    border-radius:10px; padding:18px 20px; display:flex; flex-direction:column; gap:12px;
+  }
+  .now h2{font-size:17px; color:var(--jade-ink);}
+  .now ol{margin:0; padding-left:20px; display:flex; flex-direction:column; gap:8px; color:var(--jade-ink);}
+  .now li{font-size:14.5px; line-height:1.5;}
+  .now li::marker{font-family:'IBM Plex Mono',monospace; font-weight:600;}
+
+  /* ---- Section shells ---- */
+  section.sheet{
+    background:var(--surface); border:1px solid var(--line); border-radius:10px;
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .sheet-head{
+    padding:16px 20px; border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+  .sheet-head h2{font-size:19px;}
+  .sheet-head .hint{font-size:12.5px; color:var(--ink-muted);}
+  .progress-pill{
+    font-family:'IBM Plex Mono', monospace; font-size:12.5px; font-weight:600;
+    background:var(--surface-2); border:1px solid var(--line); border-radius:999px;
+    padding:4px 10px; color:var(--ink-muted); white-space:nowrap;
+  }
+  .progress-pill b{color:var(--jade-ink);}
+
+  /* ---- Checklist groups ---- */
+  .grp{border-bottom:1px solid var(--line);}
+  .grp:last-child{border-bottom:none;}
+  .grp-head{
+    padding:12px 20px 4px; font-size:12px; text-transform:uppercase; letter-spacing:.07em;
+    color:var(--ink-muted); font-weight:600;
+  }
+  .item{
+    display:flex; gap:12px; padding:10px 20px; align-items:flex-start;
+    border-top:1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  }
+  .grp-head + .item{border-top:none;}
+  .item input[type="checkbox"]{
+    appearance:none; -webkit-appearance:none; width:20px; height:20px; flex:none; margin-top:2px;
+    border:1.5px solid var(--ink-muted); border-radius:5px; background:var(--surface); cursor:pointer;
+    display:grid; place-content:center; transition:background .12s ease, border-color .12s ease;
+  }
+  .item input[type="checkbox"]:focus-visible{outline:2px solid var(--focus); outline-offset:2px;}
+  .item input[type="checkbox"]::before{
+    content:""; width:11px; height:11px; transform:scale(0); transition:transform .1s ease;
+    background:var(--surface);
+    clip-path:polygon(14% 44%,0 59%,37% 100%,100% 16%,83% 0%,35% 65%);
+  }
+  .item input[type="checkbox"]:checked{background:var(--jade); border-color:var(--jade);}
+  .item input[type="checkbox"]:checked::before{transform:scale(1);}
+  .item label{flex:1; font-size:14.5px; line-height:1.5; cursor:pointer;}
+  .item label .t{font-weight:600;}
+  .item.done label{color:var(--ink-muted); text-decoration:line-through; text-decoration-color:var(--line);}
+  .item .note{display:block; font-size:12.5px; color:var(--ink-muted); margin-top:2px; font-weight:400;}
+  .tag{
+    display:inline-block; font-family:'IBM Plex Mono',monospace; font-size:10.5px; font-weight:600;
+    letter-spacing:.03em; padding:1px 6px; border-radius:5px; margin-left:7px; vertical-align:1px;
+  }
+  .tag.req{background:var(--seal-soft); color:var(--seal-ink);}
+  .tag.bach{background:var(--jade-soft); color:var(--jade-ink);}
+  .tag.mest{background:var(--surface-2); color:var(--ink-muted); border:1px solid var(--line);}
+
+  /* ---- Timeline ---- */
+  .timeline{padding:18px 20px 20px; display:flex; flex-direction:column; gap:0;}
+  .tl-item{display:flex; gap:14px;}
+  .tl-rail{display:flex; flex-direction:column; align-items:center; width:14px; flex:none;}
+  .tl-dot{width:10px; height:10px; border-radius:50%; background:var(--jade); margin-top:5px; flex:none;}
+  .tl-line{width:1.5px; flex:1; background:var(--line); margin:2px 0;}
+  .tl-item:last-child .tl-line{display:none;}
+  .tl-body{padding-bottom:18px; flex:1;}
+  .tl-item:last-child .tl-body{padding-bottom:0;}
+  .tl-date{font-family:'IBM Plex Mono',monospace; font-size:12.5px; font-weight:600; color:var(--jade-ink);}
+  .tl-what{font-size:14.5px; margin-top:2px; line-height:1.45;}
+
+  /* ---- Links grid ---- */
+  .linkgrid{padding:16px 20px 20px; display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:10px;}
+  .linkcard{
+    border:1px solid var(--line); border-radius:8px; padding:12px 14px; display:flex; flex-direction:column; gap:3px;
+    text-decoration:none; background:var(--surface); transition:border-color .12s ease, transform .12s ease;
+  }
+  .linkcard:hover{border-color:var(--jade);}
+  .linkcard .lc-label{font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-muted);}
+  .linkcard .lc-name{font-size:14.5px; font-weight:600; color:var(--ink);}
+  .linkcard .lc-go{font-size:12.5px; color:var(--jade-ink);}
+
+  /* ---- Contact ---- */
+  .contact{padding:16px 20px 20px; display:flex; gap:16px; flex-wrap:wrap; align-items:center;}
+  .contact .who{font-weight:600; font-size:15px;}
+  .contact .cline{font-size:13.5px; color:var(--ink-muted); display:flex; gap:6px; align-items:center;}
+
+  footer{color:var(--ink-muted); font-size:12px; text-align:center; line-height:1.6; padding-top:6px;}
+  footer a{color:var(--ink-muted);}
+
+  @media (max-width:480px){
+    .banner-dates{gap:12px;}
+    .sheet-head{flex-direction:column; align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+<nav class="toolkit-nav">
+  <div class="toolkit-nav-inner">
+    <a class="toolkit-brand" href="../">← CSC China Toolkit</a>
+    <span class="toolkit-current">Checklist Bolsa CSC</span>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="eyebrow">Bolsa de Estudos do Governo Chinês · Plano 2026–2028 · Brasil</div>
+    <h1>Checklist da candidatura</h1>
+    <p class="sub">O plano são duas candidaturas à Bolsa CSC: primeiro o Estudo Regular (curso de língua), envio em fev/2027 — depois o Bacharelado, envio em fev/2028 já de dentro da China. Marque os itens conforme for resolvendo.</p>
+  </div>
+
+  <div class="banner">
+    <div class="banner-top">
+      <div class="banner-title">⏳ Próxima candidatura: Estudo Regular</div>
+    </div>
+    <div class="banner-dates">
+      <div class="bd"><span class="lbl">Inscrição online até</span><span class="val tabnum">fev 2027</span></div>
+      <div class="bd"><span class="lbl">Resultado</span><span class="val tabnum">mar–jun 2027</span></div>
+      <div class="bd"><span class="lbl">Resultado final + visto</span><span class="val tabnum">jul–ago 2027</span></div>
+      <div class="bd"><span class="lbl">Embarque</span><span class="val tabnum">set 2027</span></div>
+    </div>
+    <p><strong>Datas ainda a confirmar:</strong> os prazos exatos (inscrição, entrevista, resultado) mudam a cada ciclo — a embaixada costuma publicar o aviso novo entre out/nov do ano anterior. Confirme com o Prof. Liu quando chegar mais perto de janeiro/2027.</p>
+  </div>
+
+  <div class="now">
+    <h2>Comece por aqui, hoje</h2>
+    <ol>
+      <li>Termine o HSK4 2.0 e o HSKK Intermediário — exame em <strong>dezembro/2026</strong>, junto com a formatura do tecnólogo em ADS.</li>
+      <li>Providencie a <strong>tradução juramentada</strong> do histórico e certificado do SENAI, com <strong>Apostila de Haia</strong> — planeje pra janeiro/2027, é o item mais lento da lista.</li>
+      <li>Entre em contato com Jilin, Xangai (Shanghai University) e Pequim (BUPT) pra abrir conta nos portais e pedir a <strong>carta de aceitação/intenção</strong> do curso de língua.</li>
+      <li>Monte o formulário e o plano de estudos com calma em janeiro, pra enviar a candidatura do <strong>Estudo Regular</strong> assim que abrir, em fevereiro/2027.</li>
+    </ol>
+  </div>
+
+  <section class="sheet" data-doc-group="regular">
+    <div class="sheet-head">
+      <div>
+        <h2>Fase 1 · Documentos — Estudo Regular</h2>
+        <div class="hint">Candidatura pro curso de língua, envio previsto pra fev/2027.</div>
+      </div>
+      <div class="progress-pill"><b class="p-count">0</b>/<span class="p-total">0</span> concluídos</div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-head">Identidade</div>
+      <div class="item"><input type="checkbox" id="e1"><label for="e1"><span class="t">Passaporte válido</span> — validade mínima de 6 meses além do fim do curso de língua.<span class="note">Cópia da página de identificação.</span></label></div>
+      <div class="item"><input type="checkbox" id="e2"><label for="e2"><span class="t">Fotos 3x4 recentes</span>, fundo branco.</label></div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-head">Formação acadêmica</div>
+      <div class="item"><input type="checkbox" id="e3"><label for="e3"><span class="t">Diploma do tecnólogo em ADS</span> (concluído dez/2026) ou declaração de previsão de formatura.<span class="note">Tecnólogo conta como nível superior completo (MEC) — leve o histórico com carga horária pra evitar dúvida do lado chinês.</span></label></div>
+      <div class="item"><input type="checkbox" id="e4"><label for="e4"><span class="t">Histórico escolar oficial</span>, traduzido e com Apostila de Haia.</label></div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-head">Candidatura</div>
+      <div class="item"><input type="checkbox" id="e5"><label for="e5"><span class="t">Formulário de inscrição CSC</span> preenchido em campuschina.org, impresso e assinado.</label></div>
+      <div class="item"><input type="checkbox" id="e6"><label for="e6"><span class="t">Plano de estudos</span> (Study Plan) pro curso de língua — por que estudar chinês, por que essa universidade.</label></div>
+      <div class="item"><input type="checkbox" id="e7"><label for="e7"><span class="t">Carta de aceitação/intenção</span> de pelo menos uma das três universidades contatadas em jan/2027.</label></div>
+      <div class="item"><input type="checkbox" id="e8"><label for="e8"><span class="t">Currículo (CV)</span> atualizado.</label></div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-head">Idioma</div>
+      <div class="item"><input type="checkbox" id="e9"><label for="e9"><span class="t">Certificado HSK4</span><span class="note">Não é obrigatório pro Estudo Regular, mas reforça a candidatura pra ir direto num nível mais avançado.</span></label></div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-head">Saúde</div>
+      <div class="item"><input type="checkbox" id="e10"><label for="e10"><span class="t">Formulário de Exame Médico para Estrangeiros</span>, carimbado pelo médico.<span class="note">Validade de 6 meses — não faça cedo demais nem deixe pra última hora antes do embarque em set/2027.</span></label></div>
+    </div>
+  </section>
+
+  <section class="sheet" data-doc-group="bacharelado">
+    <div class="sheet-head">
+      <div>
+        <h2>Fase 2 · Documentos — Bacharelado</h2>
+        <div class="hint">Segunda candidatura, enviada de dentro da China, prevista pra fev/2028.</div>
+      </div>
+      <div class="progress-pill"><b class="p-count">0</b>/<span class="p-total">0</span> concluídos</div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-head">Formação acadêmica</div>
+      <div class="item"><input type="checkbox" id="b1"><label for="b1"><span class="t">Certificado do teste CSCA</span> <span class="tag bach">Obrigatório pra Bacharelado</span><span class="note">Estudo em nov/2027–jan/2028, validação em csca.cn.</span></label></div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-head">Candidatura</div>
+      <div class="item"><input type="checkbox" id="b2"><label for="b2"><span class="t">Novo formulário de inscrição CSC</span>, agora pro Bacharelado.</label></div>
+      <div class="item"><input type="checkbox" id="b3"><label for="b3"><span class="t">Plano de estudos</span> focado no curso superior (Ciência/Engenharia da Computação).</label></div>
+      <div class="item"><input type="checkbox" id="b4"><label for="b4"><span class="t">Carta de pré-aceite do Bacharelado</span><span class="note">Conseguida presencialmente com professores das universidades-alvo, dez/2027–jan/2028 — a vantagem de já estar na China.</span></label></div>
+      <div class="item"><input type="checkbox" id="b5"><label for="b5"><span class="t">Currículo (CV)</span> atualizado.</label></div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-head">Idioma</div>
+      <div class="item"><input type="checkbox" id="b6"><label for="b6"><span class="t">Certificado HSK6 + HSKK Avançado</span><span class="note">Exame em dezembro/2027 — bem acima do HSK4 mínimo pedido pelas universidades-alvo.</span></label></div>
+    </div>
+
+    <div class="grp">
+      <div class="grp-head">Saúde e outros</div>
+      <div class="item"><input type="checkbox" id="b7"><label for="b7"><span class="t">Novo Formulário de Exame Médico</span><span class="note">O de 2027 já expirou (validade de 6 meses) — refazer em jan/2028.</span></label></div>
+      <div class="item"><input type="checkbox" id="b8"><label for="b8"><span class="t">Certidão de antecedentes criminais</span><span class="note">Jan/2028.</span></label></div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Linha do tempo completa</h2></div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">dez 2026</div><div class="tl-what">Exame HSK4 2.0 + HSKK Intermediário. Término do tecnólogo em ADS (SENAI).</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">jan 2027</div><div class="tl-what">Tradução juramentada + Apostila de Haia. Contato com Jilin, Xangai e Pequim, criação das contas.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">fev 2027</div><div class="tl-what">Envio da candidatura à Bolsa CSC — Estudo Regular.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">mar–jun 2027</div><div class="tl-what">Aguardar resultado.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">jul 2027</div><div class="tl-what">Resultado + início do processo de visto.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">ago 2027</div><div class="tl-what">Emissão do visto.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">set 2027</div><div class="tl-what">Ida para a China. Início das aulas de língua (até jul/2028) e estudo pras entrevistas.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">nov 2027 – jan 2028</div><div class="tl-what">Estudo e exame do CSCA (Matemática, Física e Chinês).</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">dez 2027</div><div class="tl-what">Exame HSK6 + HSKK Avançado.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">dez 2027 – jan 2028</div><div class="tl-what">Contato com professores das universidades-alvo pra carta de pré-aceite do Bacharelado.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">jan 2028</div><div class="tl-what">Antecedentes criminais + novo exame médico.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">fev 2028</div><div class="tl-what">Envio da candidatura ao Bacharelado + Bolsa CSC.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">mar–jun 2028</div><div class="tl-what">Análise da candidatura + entrevistas.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div><div class="tl-line"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">jun–jul 2028</div><div class="tl-what">Fim do curso de língua + resultado do Bacharelado.</div></div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-rail"><div class="tl-dot"></div></div>
+        <div class="tl-body"><div class="tl-date tabnum">set 2028</div><div class="tl-what">Início do Bacharelado.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet">
+    <div class="sheet-head"><h2>Portal &amp; contato</h2></div>
+    <div class="linkgrid">
+      <a class="linkcard" href="https://www.campuschina.org" target="_blank" rel="noopener noreferrer"><span class="lc-label">Portal</span><span class="lc-name">campuschina.org</span><span class="lc-go">Abrir ↗</span></a>
+    </div>
+    <p style="padding:0 20px 16px; margin:0; font-size:12.5px; color:var(--ink-muted); max-width:60ch;">Os anexos e o código de instituição usados na candidatura de 2026 (aviso da Embaixada de 08/11/2025) não valem automaticamente pra 2027 — a embaixada costuma publicar um aviso novo pra cada ciclo. Confirme o aviso e os anexos atualizados com o Prof. Liu antes de preencher o formulário.</p>
+    <div class="contact">
+      <div class="who">Prof. Liu — Embaixada da China no Brasil</div>
+      <div class="cline">📞 +55-61-2195 8238</div>
+      <div class="cline">✉️ edu-embchina@hotmail.com</div>
+    </div>
+  </section>
+
+  <footer>
+    Baseado no plano pessoal fechado em 2026 e no aviso oficial da Embaixada de 08/11/2025 sobre o processo CSC. Datas de ciclos futuros (2027, 2028) são estimativas com base no padrão histórico — confirme os prazos exatos diretamente com o Prof. Liu conforme cada ciclo abrir.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var groups = Array.prototype.slice.call(document.querySelectorAll('section.sheet[data-doc-group]'));
+  var KEY = 'csc-checklist-v2';
+  var state = {};
+  try { state = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){ state = {}; }
+
+  function save(){
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){}
+  }
+  groups.forEach(function(section){
+    var boxes = Array.prototype.slice.call(section.querySelectorAll('.item input[type="checkbox"]'));
+    var pCount = section.querySelector('.p-count');
+    var pTotal = section.querySelector('.p-total');
+    function update(){
+      var done = boxes.filter(function(b){ return b.checked; }).length;
+      if (pCount) pCount.textContent = done;
+      if (pTotal) pTotal.textContent = boxes.length;
+    }
+    boxes.forEach(function(b){
+      if (state[b.id]) { b.checked = true; b.closest('.item').classList.add('done'); }
+      b.addEventListener('change', function(){
+        state[b.id] = b.checked;
+        b.closest('.item').classList.toggle('done', b.checked);
+        save();
+        update();
+      });
+    });
+    update();
+  });
+})();
+</script>
+</body>
+</html>

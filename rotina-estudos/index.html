@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rotina Até a China · CSC China Toolkit</title>
+<meta name="description" content="Plano de estudos dividido por fase, do HSK4 até a entrevista da Bolsa do Governo Chinês (CSC).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Source+Sans+3:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#f4f3ef;
+    --surface:#ffffff;
+    --ink:#1d201d;
+    --ink-soft:#5c625b;
+    --line:#ddd8cd;
+    --accent:#6b4fa0;
+    --accent-soft:#ece6f5;
+    --now-bg:#fff4e0;
+    --now-line:#e8c883;
+    --now-ink:#8a5a10;
+    --focus:#6b4fa0;
+    --font-display:"Fraunces", Georgia, serif;
+    --font-body:"Source Sans 3", -apple-system, sans-serif;
+    --font-zh:"Noto Sans SC", sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#17171a; --surface:#1f1f22; --ink:#e8e7e2; --ink-soft:#9d9c96; --line:#2e2e31;
+      --accent:#b39ddb; --accent-soft:#2c2440;
+      --now-bg:#3a2e10; --now-line:#5c4718; --now-ink:#e0b968;
+      --focus:#b39ddb;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#17171a; --surface:#1f1f22; --ink:#e8e7e2; --ink-soft:#9d9c96; --line:#2e2e31;
+    --accent:#b39ddb; --accent-soft:#2c2440;
+    --now-bg:#3a2e10; --now-line:#5c4718; --now-ink:#e0b968;
+    --focus:#b39ddb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  .toolkit-nav{background:var(--surface); border-bottom:1px solid var(--line);}
+  .toolkit-nav-inner{max-width:820px; margin:0 auto; padding:13px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .toolkit-brand{font-size:.78rem; font-weight:700; letter-spacing:.03em; color:var(--ink-soft); text-decoration:none;}
+  .toolkit-brand:hover{color:var(--ink);}
+  .toolkit-current{font-family:var(--font-body); font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-soft);}
+  body{background:var(--paper); color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased;}
+  :focus-visible{outline:2px solid var(--focus); outline-offset:2px;}
+  h1,h2,h3{font-family:var(--font-display); text-wrap:balance; margin:0;}
+  a{color:var(--accent);}
+  .wrap{max-width:740px; margin:0 auto; padding-inline:20px;}
+
+  .mast{padding-block:48px 30px; border-bottom:1px solid var(--line);}
+  .eyebrow{font-size:.78rem; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-soft); font-weight:700; margin-bottom:10px;}
+  .mast h1{font-size:2.1rem; font-weight:800;}
+  .mast p.lede{max-width:60ch; margin-top:12px; color:var(--ink-soft); font-size:1.02rem;}
+
+  nav.pills{position:sticky; top:env(safe-area-inset-top,0px); z-index:10; background:color-mix(in srgb, var(--paper) 90%, transparent); backdrop-filter:blur(8px); border-bottom:1px solid var(--line);}
+  nav.pills .wrap{display:flex; gap:8px; padding-block:10px; overflow-x:auto; scrollbar-width:none;}
+  nav.pills .wrap::-webkit-scrollbar{display:none;}
+  nav.pills a{flex:none; font-size:.83rem; font-weight:700; padding:6px 14px; border-radius:100px; border:1px solid var(--line); text-decoration:none; color:var(--ink-soft); white-space:nowrap;}
+  nav.pills a[data-active="true"]{background:var(--accent); border-color:var(--accent); color:#fff;}
+
+  section.fase{padding-block:40px; border-bottom:1px solid var(--line); scroll-margin-top:56px;}
+  section.fase:last-of-type{border-bottom:none;}
+  .fase-head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:6px;}
+  .fase-title{font-size:1.4rem; font-weight:800;}
+  .fase-when{font-size:.82rem; font-weight:700; color:var(--accent); background:var(--accent-soft); padding:3px 12px; border-radius:100px;}
+  .fase-when.now{color:var(--now-ink); background:var(--now-bg); border:1px solid var(--now-line);}
+  .fase-sub{color:var(--ink-soft); font-size:.95rem; margin:8px 0 24px; max-width:58ch;}
+
+  .cards{display:flex; flex-direction:column; gap:14px;}
+  .card{background:var(--surface); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:8px; padding:16px 18px;}
+  .card h4{font-size:1rem; font-weight:700; margin-bottom:6px;}
+  .card p{margin:0 0 8px; color:var(--ink-soft); font-size:.93rem;}
+  .card .cadence{font-size:.82rem; font-weight:700; color:var(--accent); margin-bottom:8px; display:block;}
+  .card .tool{display:inline-flex; align-items:center; gap:6px; font-size:.85rem; font-weight:600; margin-top:4px;}
+  .card .tool::before{content:"↗"; }
+
+  footer{padding-block:36px 60px;}
+  footer p{color:var(--ink-soft); font-size:.88rem; max-width:60ch;}
+
+  @media (max-width:480px){
+    .mast{padding-block:36px 24px;}
+    .mast h1{font-size:1.7rem;}
+    .fase-title{font-size:1.2rem;}
+  }
+</style>
+</head>
+<body>
+<nav class="toolkit-nav">
+  <div class="toolkit-nav-inner">
+    <a class="toolkit-brand" href="../">← CSC China Toolkit</a>
+    <span class="toolkit-current">Rotina Até a China</span>
+  </div>
+</nav>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="eyebrow">Guia de rotina · rumo à China</div>
+    <h1>Rotina Até a China</h1>
+    <p class="lede">O plano fechado: primeiro uma bolsa de Estudo Regular (curso de língua) em 2027, depois a candidatura ao Bacharelado direto de dentro da China em 2028. O que estudar em cada fase, com que frequência, e com qual ferramenta.</p>
+  </div>
+</header>
+
+<nav class="pills" id="pillNav">
+  <div class="wrap">
+    <a href="#f1" data-target="f1">Até Dez/26</a>
+    <a href="#f2" data-target="f2">Jan–Jun/27</a>
+    <a href="#f3" data-target="f3">Jul–Ago/27</a>
+    <a href="#f4" data-target="f4">Set/27–Jan/28</a>
+    <a href="#f5" data-target="f5">Jan–Jul/28</a>
+    <a href="#f6" data-target="f6">Set/28</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section class="fase" id="f1">
+  <div class="fase-head"><div class="fase-title">Fase 1 · Reta final do HSK4</div><div class="fase-when now">Agora até dez/2026</div></div>
+  <p class="fase-sub">Foco total: vocabulário e gramática consolidados, e destravar a fala — essa é a prioridade real até dezembro. Fecha junto com o tecnólogo em ADS.</p>
+  <div class="cards">
+    <div class="card">
+      <h4>Vocabulário e gramática (HSK4)</h4>
+      <span class="cadence">Todo dia, 20-30 min</span>
+      <p>Revisão do deck de Anki + repasse dos padrões gramaticais por nível.</p>
+      <a class="tool" href="../mapa-gramatical-hsk/">Mapa Gramatical HSK</a>
+    </div>
+    <div class="card">
+      <h4>Simulado de prova (audição, leitura)</h4>
+      <span class="cadence">2-3x por semana, uma seção por vez</span>
+      <p>Treina o formato oficial e o ritmo de tempo por parte, não só o conteúdo solto.</p>
+      <a class="tool" href="../simulado-hsk/">Simulado HSK</a>
+    </div>
+    <div class="card">
+      <h4>Fala (pro HSKK Intermediário)</h4>
+      <span class="cadence">3-4x por semana, 15-20 min</span>
+      <p>Shadowing + conversa real (parceiro de intercâmbio) — essa é a parte que o Anki não resolve sozinho.</p>
+      <a class="tool" href="../roteiro-2min/">Roteiro de 2 Minutos</a>
+    </div>
+    <div class="card">
+      <h4>Marcos de dezembro/2026</h4>
+      <span class="cadence">Exame HSK4 2.0 + HSKK Intermediário</span>
+      <p>Fecham essa fase junto com o término do tecnólogo em ADS no SENAI — o diploma que garante nível superior completo pra candidatura.</p>
+    </div>
+  </div>
+</section>
+
+<section class="fase" id="f2">
+  <div class="fase-head"><div class="fase-title">Fase 2 · Documentos e candidatura do Estudo Regular</div><div class="fase-when">Jan–Jun/2027</div></div>
+  <p class="fase-sub">Menos pressão de prova, mais burocracia. O objetivo dessa fase é enviar a candidatura à Bolsa CSC pro curso de língua (Estudo Regular).</p>
+  <div class="cards">
+    <div class="card">
+      <h4>Tradução juramentada e Apostila de Haia</h4>
+      <span class="cadence">Janeiro/2027</span>
+      <p>Histórico e certificado do SENAI traduzidos e apostilados — o item que mais trava se deixado pra depois.</p>
+    </div>
+    <div class="card">
+      <h4>Contato com as universidades</h4>
+      <span class="cadence">Janeiro/2027</span>
+      <p>Jilin, Xangai (Shanghai University) e Pequim (BUPT) — criação de conta nos portais e primeiro contato para o curso de língua.</p>
+    </div>
+    <div class="card">
+      <h4>Envio da candidatura (Estudo Regular)</h4>
+      <span class="cadence">Fevereiro/2027</span>
+      <p>Inscrição da Bolsa CSC em campuschina.org com todos os documentos reunidos em janeiro.</p>
+      <a class="tool" href="../checklist-bolsa-csc/">Checklist Bolsa CSC</a>
+    </div>
+    <div class="card">
+      <h4>Manutenção de chinês</h4>
+      <span class="cadence">Mar–Jun/2027, 3x por semana, 15 min</span>
+      <p>Enquanto aguarda o resultado, só revisão espaçada no Anki pra não perder o que já foi construído — sem exame no radar, o objetivo é não regredir.</p>
+    </div>
+  </div>
+</section>
+
+<section class="fase" id="f3">
+  <div class="fase-head"><div class="fase-title">Fase 3 · Resultado e visto</div><div class="fase-when">Jul–Ago/2027</div></div>
+  <p class="fase-sub">Fase curta e sem estudo — só burocracia de embarque, uma vez que o resultado sair.</p>
+  <div class="cards">
+    <div class="card">
+      <h4>Resultado da bolsa</h4>
+      <span class="cadence">Julho/2027</span>
+      <p>Assim que sai o resultado, começa o processo de visto.</p>
+    </div>
+    <div class="card">
+      <h4>Emissão do visto</h4>
+      <span class="cadence">Agosto/2027</span>
+      <p>Última etapa antes de embarcar para a China.</p>
+    </div>
+  </div>
+</section>
+
+<section class="fase" id="f4">
+  <div class="fase-head"><div class="fase-title">Fase 4 · Imersão + CSCA</div><div class="fase-when">Set/2027–Jan/2028, na China</div></div>
+  <p class="fase-sub">Curso de língua de set/2027 a jul/2028. Agora o ambiente estuda por você em parte — o trabalho é direcionar esse tempo pro que o curso de idioma sozinho não cobre.</p>
+  <div class="cards">
+    <div class="card">
+      <h4>Início das aulas + estudo pra entrevistas</h4>
+      <span class="cadence">A partir de setembro/2027</span>
+      <p>As aulas de língua começam junto com o preparo pras entrevistas que virão em 2028.</p>
+      <a class="tool" href="../roteiro-2min/">Roteiro de 2 Minutos</a>
+    </div>
+    <div class="card">
+      <h4>Matemática e Física do CSCA</h4>
+      <span class="cadence">Nov/2027–Jan/2028, 4-5x por semana, 40 min</span>
+      <p>Revisão de fórmulas + simulados cronometrados — o conteúdo é ensino médio, o gargalo é ritmo de prova.</p>
+      <a class="tool" href="../formulas-csca/">Fórmulas do CSCA</a>
+    </div>
+    <div class="card">
+      <h4>HSK6 + HSKK Avançado</h4>
+      <span class="cadence">Exame em dezembro/2027</span>
+      <p>Vocabulário novo vem do dia a dia; use o Anki só pra fixar o que aparecer de real na rua/aula, não pra aprender do zero.</p>
+    </div>
+    <div class="card">
+      <h4>Carta de pré-aceite do Bacharelado</h4>
+      <span class="cadence">Dez/2027–Jan/2028</span>
+      <p>Contato presencial com professores das universidades-alvo — a vantagem real de já estar lá.</p>
+    </div>
+  </div>
+</section>
+
+<section class="fase" id="f5">
+  <div class="fase-head"><div class="fase-title">Fase 5 · Candidatura ao Bacharelado</div><div class="fase-when">Jan–Jul/2028</div></div>
+  <p class="fase-sub">Segunda candidatura à Bolsa CSC, agora pro Bacharelado — enviada de dentro da China, já com HSK6, carta de pré-aceite e CSCA na mão.</p>
+  <div class="cards">
+    <div class="card">
+      <h4>Antecedentes criminais e exames médicos</h4>
+      <span class="cadence">Janeiro/2028</span>
+      <p>Novo Formulário de Exame Médico (a validade de 6 meses do de 2027 já expirou) e certidão de antecedentes.</p>
+    </div>
+    <div class="card">
+      <h4>Envio da candidatura (Bacharelado)</h4>
+      <span class="cadence">Fevereiro/2028</span>
+      <p>Nova inscrição na Bolsa CSC, agora pro curso superior.</p>
+      <a class="tool" href="../checklist-bolsa-csc/">Checklist Bolsa CSC</a>
+    </div>
+    <div class="card">
+      <h4>Análise e entrevistas</h4>
+      <span class="cadence">Mar–Jun/2028, 2x por semana de ensaio</span>
+      <p>Ensaiar respostas pra "por que China", "por que esse curso", planos de carreira — com alguém ouvindo, não só sozinho no espelho.</p>
+      <a class="tool" href="../roteiro-2min/">Roteiro de 2 Minutos</a>
+    </div>
+    <div class="card">
+      <h4>Fim do curso de língua + resultado</h4>
+      <span class="cadence">Jun–Jul/2028</span>
+      <p>O curso de idioma se encerra praticamente junto com o resultado do Bacharelado.</p>
+    </div>
+  </div>
+</section>
+
+<section class="fase" id="f6">
+  <div class="fase-head"><div class="fase-title">Fase 6 · Início do Bacharelado</div><div class="fase-when">Setembro/2028</div></div>
+  <p class="fase-sub">O objetivo final de todo o plano.</p>
+  <div class="cards">
+    <div class="card">
+      <h4>Início das aulas do Bacharelado</h4>
+      <span class="cadence">Setembro/2028</span>
+      <p>Quase dois anos depois de começar essa rotina — com HSK6, HSKK Avançado e CSCA no currículo.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <p>Cada fase troca o que precisa de esforço deliberado pelo que a imersão ou a rotina já resolve sozinha — o objetivo é nunca estudar duas coisas com a mesma intensidade ao mesmo tempo.</p>
+</footer>
+
+<script>
+(function(){
+  try{
+    var sections = Array.prototype.slice.call(document.querySelectorAll('section.fase'));
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.pills a'));
+    function setActive(id){ links.forEach(function(a){ a.dataset.active = (a.dataset.target === id) ? "true" : "false"; }); }
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting){ setActive(e.target.id); } });
+      }, {rootMargin:"-40% 0px -55% 0px"});
+      sections.forEach(function(s){ io.observe(s); });
+    }
+    if(links[0]) links[0].dataset.active = "true";
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

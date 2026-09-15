@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roteiro de 2 Minutos · CSC China Toolkit</title>
+<meta name="description" content="Estrutura fixa com frases prontas em chinês para treinar a descrição de imagens em cerca de dois minutos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700;9..144,800&family=Source+Sans+3:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#f4f3ef;
+    --surface:#ffffff;
+    --ink:#1d201d;
+    --ink-soft:#5c625b;
+    --line:#ddd8cd;
+
+    --rec:#d64545;
+    --rec-soft:#fbe9e7;
+    --time:#c98a1e;
+    --time-soft:#fdf1dc;
+
+    --focus:#c98a1e;
+    --font-display:"Fraunces", Georgia, serif;
+    --font-body:"Source Sans 3", -apple-system, sans-serif;
+    --font-zh:"Noto Sans SC", "PingFang SC", sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#17171a;
+      --surface:#1f1f22;
+      --ink:#e8e7e2;
+      --ink-soft:#9d9c96;
+      --line:#2e2e31;
+
+      --rec:#ec6f6f;
+      --rec-soft:#3a2020;
+      --time:#e0ab52;
+      --time-soft:#3a2e14;
+
+      --focus:#e0ab52;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#17171a;
+    --surface:#1f1f22;
+    --ink:#e8e7e2;
+    --ink-soft:#9d9c96;
+    --line:#2e2e31;
+
+    --rec:#ec6f6f;
+    --rec-soft:#3a2020;
+    --time:#e0ab52;
+    --time-soft:#3a2e14;
+
+    --focus:#e0ab52;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  .toolkit-nav{background:var(--surface); border-bottom:1px solid var(--line);}
+  .toolkit-nav-inner{max-width:820px; margin:0 auto; padding:13px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .toolkit-brand{font-size:.78rem; font-weight:700; letter-spacing:.03em; color:var(--ink-soft); text-decoration:none;}
+  .toolkit-brand:hover{color:var(--ink);}
+  .toolkit-current{font-family:var(--font-body); font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-soft);}
+  body{background:var(--paper); color:var(--ink); font-family:var(--font-body); font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased;}
+  :focus-visible{outline:2px solid var(--focus); outline-offset:2px;}
+  h1,h2,h3{font-family:var(--font-display); text-wrap:balance; margin:0;}
+  .wrap{max-width:740px; margin:0 auto; padding-inline:20px;}
+
+  .mast{padding-block:48px 30px; border-bottom:1px solid var(--line);}
+  .eyebrow{font-size:.78rem; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-soft); font-weight:700; margin-bottom:10px; display:flex; align-items:center; gap:8px;}
+  .dot{width:8px; height:8px; border-radius:50%; background:var(--rec); flex:none;}
+  .mast h1{font-size:2.1rem; font-weight:800; letter-spacing:-.01em;}
+  .mast p.lede{max-width:60ch; margin-top:12px; color:var(--ink-soft); font-size:1.02rem;}
+
+  /* TIMELINE */
+  .timeline{margin-top:28px;}
+  .timebar{display:flex; height:34px; border-radius:8px; overflow:hidden; border:1px solid var(--line);}
+  .timebar .seg{display:flex; align-items:center; justify-content:center; font-size:.72rem; font-weight:700; color:#fff; font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden;}
+  .timeline .marks{display:flex; justify-content:space-between; margin-top:6px; font-size:.72rem; color:var(--ink-soft); font-variant-numeric:tabular-nums;}
+
+  main{padding-block:8px 20px;}
+  .step{padding-block:26px; border-bottom:1px solid var(--line); display:flex; gap:16px;}
+  .step:last-of-type{border-bottom:none;}
+  .step-num{
+    flex:none; width:38px; height:38px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:800; font-size:1rem; color:#fff;
+    background:var(--time);
+  }
+  .step-body{flex:1; min-width:0;}
+  .step-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:10px;}
+  .step-title{font-family:var(--font-display); font-weight:700; font-size:1.08rem;}
+  .step-time{font-size:.78rem; font-weight:700; color:var(--time); background:var(--time-soft); padding:2px 10px; border-radius:100px; flex:none;}
+  .phrases{display:flex; flex-direction:column; gap:10px;}
+  .phrase{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 14px;}
+  .phrase .zh{font-family:var(--font-zh); font-size:1.05rem; font-weight:500;}
+  .phrase .py{font-style:italic; color:var(--ink-soft); font-size:.86rem; margin-top:2px;}
+  .phrase .pt{font-size:.88rem; margin-top:4px;}
+  .phrase .pt::before{content:"→ "; color:var(--ink-soft);}
+
+  .toolbox{background:var(--rec-soft); border:1px solid var(--line); border-radius:12px; padding:22px; margin-block:30px;}
+  .toolbox h2{font-size:1.2rem; font-weight:800; color:var(--rec); margin-bottom:4px;}
+  .toolbox p.sub{color:var(--ink-soft); font-size:.9rem; margin:4px 0 16px;}
+  .tool-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:10px;}
+  .tool-item{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:10px 12px;}
+  .tool-item .zh{font-family:var(--font-zh); font-weight:500;}
+  .tool-item .pt{font-size:.85rem; color:var(--ink-soft); margin-top:3px;}
+
+  footer{padding-block:30px 56px;}
+  footer p{color:var(--ink-soft); font-size:.88rem; max-width:60ch;}
+
+  @media (max-width:480px){
+    .mast{padding-block:36px 24px;}
+    .mast h1{font-size:1.7rem;}
+    .step{gap:12px;}
+  }
+</style>
+</head>
+<body>
+<nav class="toolkit-nav">
+  <div class="toolkit-nav-inner">
+    <a class="toolkit-brand" href="../">← CSC China Toolkit</a>
+    <span class="toolkit-current">Roteiro de 2 Minutos</span>
+  </div>
+</nav>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span>Roteiro de fala · descrição de imagem</div>
+    <h1>Roteiro de 2 Minutos</h1>
+    <p class="lede">Uma estrutura fixa pra descrever qualquer imagem em chinês por cerca de 2 minutos — treine encaixando os detalhes de cada foto nesses 8 blocos, sempre na mesma ordem, até virar automático.</p>
+
+    <div class="timeline">
+      <div class="timebar">
+        <div class="seg" style="width:8.3%; background:#c98a1e;">10s</div>
+        <div class="seg" style="width:16.7%; background:#c07f22;">20s</div>
+        <div class="seg" style="width:20.8%; background:#b67426;">25s</div>
+        <div class="seg" style="width:12.5%; background:#ac692a;">15s</div>
+        <div class="seg" style="width:12.5%; background:#a25e2e;">15s</div>
+        <div class="seg" style="width:8.3%; background:#985332;">10s</div>
+        <div class="seg" style="width:12.5%; background:#8e4836;">15s</div>
+        <div class="seg" style="width:8.3%; background:#843d3a;">10s</div>
+      </div>
+      <div class="marks"><span>0s</span><span>60s</span><span>120s</span></div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-head"><div class="step-title">Abertura</div><div class="step-time">~10s</div></div>
+      <div class="phrases">
+        <div class="phrase"><div class="zh">这张图片里有…</div><div class="py">Zhè zhāng túpiàn lǐ yǒu…</div><div class="pt">Nesta imagem há…</div></div>
+        <div class="phrase"><div class="zh">我看到的是一张关于…的照片。</div><div class="py">Wǒ kàndào de shì yī zhāng guānyú…de zhàopiàn.</div><div class="pt">O que vejo é uma foto sobre…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-head"><div class="step-title">Pessoa e cenário</div><div class="step-time">~20s</div></div>
+      <div class="phrases">
+        <div class="phrase"><div class="zh">这是一位/一个…岁左右的男士/女士。</div><div class="py">Zhè shì yī wèi/yí gè…suì zuǒyòu de nánshì/nǚshì.</div><div class="pt">Este é um homem/uma mulher de aproximadamente … anos.</div></div>
+        <div class="phrase"><div class="zh">他/她留着…头发，穿着…。</div><div class="py">Tā liúzhe…tóufa, chuānzhe…</div><div class="pt">Ele/ela tem cabelo…, está vestindo…</div></div>
+        <div class="phrase"><div class="zh">背景是在办公室/机场/家里…</div><div class="py">Bèijǐng shì zài bàngōngshì/jīchǎng/jiā lǐ…</div><div class="pt">O cenário é no escritório/aeroporto/em casa…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-head"><div class="step-title">Ação</div><div class="step-time">~25s</div></div>
+      <div class="phrases">
+        <div class="phrase"><div class="zh">他/她正在…</div><div class="py">Tā zhèngzài…</div><div class="pt">Ele/ela está [fazendo]…</div></div>
+        <div class="phrase"><div class="zh">一边…一边…</div><div class="py">Yìbiān…yìbiān…</div><div class="pt">ao mesmo tempo que…, também…</div></div>
+        <div class="phrase"><div class="zh">手里拿着…，桌上放着…</div><div class="py">Shǒu lǐ názhe…, zhuō shàng fàngzhe…</div><div class="pt">Segura na mão…, na mesa está…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-head"><div class="step-title">Expressão e emoção</div><div class="step-time">~15s</div></div>
+      <div class="phrases">
+        <div class="phrase"><div class="zh">他/她的表情看起来很…</div><div class="py">Tā de biǎoqíng kànqǐlái hěn…</div><div class="pt">A expressão dele/dela parece muito…</div></div>
+        <div class="phrase"><div class="zh">从他/她的表情可以看出…</div><div class="py">Cóng tā de biǎoqíng kěyǐ kànchū…</div><div class="pt">Pela expressão dá pra perceber que…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <div class="step-head"><div class="step-title">Suposição de motivo</div><div class="step-time">~15s</div></div>
+      <div class="phrases">
+        <div class="phrase"><div class="zh">我猜/我觉得他/她可能是因为…</div><div class="py">Wǒ cāi/wǒ juéde tā kěnéng shì yīnwèi…</div><div class="pt">Acho/imagino que ele/ela provavelmente [está assim] porque…</div></div>
+        <div class="phrase"><div class="zh">也许是因为…所以…</div><div class="py">Yěxǔ shì yīnwèi…suǒyǐ…</div><div class="pt">Talvez seja porque…, por isso…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <div class="step-head"><div class="step-title">Detalhe extra</div><div class="step-time">~10s</div></div>
+      <div class="phrases">
+        <div class="phrase"><div class="zh">图片中还可以看到…</div><div class="py">Túpiàn zhōng hái kěyǐ kàndào…</div><div class="pt">Na imagem também dá pra ver…</div></div>
+        <div class="phrase"><div class="zh">除此之外，…</div><div class="py">Chúcǐ zhīwài, …</div><div class="pt">Além disso, …</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">7</div>
+    <div class="step-body">
+      <div class="step-head"><div class="step-title">Opinião pessoal</div><div class="step-time">~15s</div></div>
+      <div class="phrases">
+        <div class="phrase"><div class="zh">这让我想起了…</div><div class="py">Zhè ràng wǒ xiǎngqǐle…</div><div class="pt">Isso me faz lembrar de…</div></div>
+        <div class="phrase"><div class="zh">我觉得这种情况在现实生活中很常见。</div><div class="py">Wǒ juéde zhè zhǒng qíngkuàng zài xiànshí shēnghuó zhōng hěn chángjiàn.</div><div class="pt">Acho que essa situação é bem comum na vida real.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">8</div>
+    <div class="step-body">
+      <div class="step-head"><div class="step-title">Previsão e conclusão</div><div class="step-time">~10s</div></div>
+      <div class="phrases">
+        <div class="phrase"><div class="zh">我猜接下来他/她可能会…</div><div class="py">Wǒ cāi jiēxiàlái tā kěnéng huì…</div><div class="pt">Imagino que, a seguir, ele/ela deve…</div></div>
+        <div class="phrase"><div class="zh">总的来说，这张图片让我感受到…</div><div class="py">Zǒngdeláishuō, zhè zhāng túpiàn ràng wǒ gǎnshòudào…</div><div class="pt">No geral, essa imagem me transmite a sensação de…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbox">
+    <h2>Caixa de conectores</h2>
+    <p class="sub">Use pra emendar frases e ganhar tempo de pensar sem parar de falar.</p>
+    <div class="tool-grid">
+      <div class="tool-item"><div class="zh">首先…然后…最后…</div><div class="pt">primeiro… depois… por fim…</div></div>
+      <div class="tool-item"><div class="zh">值得注意的是…</div><div class="pt">vale notar que…</div></div>
+      <div class="tool-item"><div class="zh">换句话说…</div><div class="pt">em outras palavras…</div></div>
+      <div class="tool-item"><div class="zh">总而言之…</div><div class="pt">em suma…</div></div>
+      <div class="tool-item"><div class="zh">不管怎么样…</div><div class="pt">de qualquer forma…</div></div>
+      <div class="tool-item"><div class="zh">除了…以外…</div><div class="pt">além de…</div></div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="wrap">
+  <p>Treine pegando uma imagem qualquer e passando pelos 8 blocos na ordem, cronometrando. Com a repetição, o esqueleto vira automático e você só precisa pensar no conteúdo específico de cada foto, não na estrutura da fala.</p>
+</footer>
+</body>
+</html>

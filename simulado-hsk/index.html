@@ -1,0 +1,1115 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulado HSK · CSC China Toolkit</title>
+<meta name="description" content="Simulador de provas HSK 1 a 6 com a estrutura e quantidade oficial de questões, para treinar antes do exame real.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --paper:#f4f3ef; --surface:#ffffff; --surface-2:#eae7e0; --line:#ddd8cd;
+    --ink:#1d201d; --ink-muted:#5c625b;
+    --accent:#2c4a6e; --accent-soft:#dde6ee; --accent-ink:#1c3350;
+    --good:#2f7a4f; --good-soft:#dcefe1;
+    --bad:#b23a2e; --bad-soft:#f6ddd8;
+    --l1:#4c9a6a; --l2:#7a9e3f; --l3:#b08b2e; --l4:#c97a2e; --l5:#c1502e; --l6:#a5312e;
+    --l1-soft:#e2f1e7; --l2-soft:#eaf1de; --l3-soft:#f3ead4; --l4-soft:#f6e4d3; --l5-soft:#f5ddd3; --l6-soft:#f0d7d5;
+    --shadow:0 1px 2px rgba(20,24,22,.06), 0 10px 26px -14px rgba(20,24,22,.22);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#17171a; --surface:#1f1f22; --surface-2:#262629; --line:#2e2e31;
+      --ink:#e8e7e2; --ink-muted:#9d9c96;
+      --accent:#8fb6dd; --accent-soft:#213142; --accent-ink:#cfe2f4;
+      --good:#7fcb9a; --good-soft:#173226;
+      --bad:#e08575; --bad-soft:#3a211f;
+      --l1:#7fcb9a; --l2:#a8c96e; --l3:#d8b968; --l4:#e2a15f; --l5:#e08066; --l6:#e08575;
+      --l1-soft:#173226; --l2-soft:#242e17; --l3-soft:#312a15; --l4-soft:#332617; --l5-soft:#332019; --l6-soft:#341f1d;
+      --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 26px -14px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#17171a; --surface:#1f1f22; --surface-2:#262629; --line:#2e2e31;
+    --ink:#e8e7e2; --ink-muted:#9d9c96;
+    --accent:#8fb6dd; --accent-soft:#213142; --accent-ink:#cfe2f4;
+    --good:#7fcb9a; --good-soft:#173226;
+    --bad:#e08575; --bad-soft:#3a211f;
+    --l1:#7fcb9a; --l2:#a8c96e; --l3:#d8b968; --l4:#e2a15f; --l5:#e08066; --l6:#e08575;
+    --l1-soft:#173226; --l2-soft:#242e17; --l3-soft:#312a15; --l4-soft:#332617; --l5-soft:#332019; --l6-soft:#341f1d;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 26px -14px rgba(0,0,0,.55);
+  }
+  *{box-sizing:border-box;}
+  .toolkit-nav{background:var(--surface); border-bottom:1px solid var(--line);}
+  .toolkit-nav-inner{max-width:820px; margin:0 auto; padding:13px 16px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .toolkit-brand{font-size:.78rem; font-weight:700; letter-spacing:.03em; color:var(--ink-muted); text-decoration:none;}
+  .toolkit-brand:hover{color:var(--ink);}
+  .toolkit-current{font-family:'IBM Plex Mono',monospace; font-size:.7rem; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-muted);}
+  body{margin:0; background:var(--paper); color:var(--ink); font-family:'Source Sans 3',system-ui,sans-serif; padding:0 0 90px; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Fraunces',Georgia,serif; text-wrap:balance; margin:0;}
+  .mono{font-family:'IBM Plex Mono',ui-monospace,monospace; font-variant-numeric:tabular-nums;}
+  button{font:inherit; cursor:pointer;}
+  .wrap{max-width:820px; margin:0 auto; padding:24px 16px 0; display:flex; flex-direction:column; gap:20px;}
+  [hidden]{display:none !important;}
+
+  .top{display:flex; flex-direction:column; gap:6px;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.09em; text-transform:uppercase; color:var(--accent-ink); display:flex; align-items:center; gap:8px;}
+  .eyebrow::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--accent);}
+  h1{font-size:clamp(26px,5vw,36px); font-weight:600;}
+  .sub{color:var(--ink-muted); font-size:14.5px; max-width:64ch; line-height:1.55;}
+  .sub a{color:var(--accent-ink);}
+
+  .levels{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:12px;}
+  .lvl-card{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:10px; box-shadow:var(--shadow); text-align:left; color:var(--ink);}
+  .lvl-top{display:flex; align-items:center; justify-content:space-between;}
+  .lvl-badge{font-family:'IBM Plex Mono',monospace; font-weight:600; font-size:13px; padding:3px 9px; border-radius:999px;}
+  .lvl-words{font-size:12px; color:var(--ink-muted);}
+  .lvl-name{font-size:19px; font-weight:600;}
+  .lvl-blurb{font-size:13px; color:var(--ink-muted); line-height:1.4; min-height:36px;}
+  .lvl-parts{display:flex; gap:6px; flex-wrap:wrap; font-size:11.5px; color:var(--ink-muted);}
+  .lvl-parts span{background:var(--surface-2); border-radius:6px; padding:2px 7px;}
+  .lvl-count{font-size:11.5px; color:var(--ink-muted); font-family:'IBM Plex Mono',monospace;}
+  .lvl-count b{color:var(--good);}
+  .lvl-go{margin-top:4px; border:none; border-radius:8px; padding:9px 12px; font-weight:600; font-size:14px; background:var(--accent); color:var(--surface); transition:opacity .12s;}
+  .lvl-go:hover{opacity:.88;}
+  .lvl-progress{font-size:11.5px; color:var(--ink-muted);}
+  .lvl-progress b{color:var(--ink);}
+
+  section.sheet{background:var(--surface); border:1px solid var(--line); border-radius:12px; box-shadow:var(--shadow); overflow:hidden;}
+
+  .exam-head{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:16px 20px; border-bottom:1px solid var(--line); flex-wrap:wrap;}
+  .exam-head-left{display:flex; align-items:center; gap:10px;}
+  .back{border:1px solid var(--line); background:var(--surface); border-radius:8px; padding:6px 11px; font-size:13px; color:var(--ink);}
+  .back:hover{border-color:var(--accent);}
+  .exam-title{font-size:16px; font-weight:600;}
+  .exam-sub{font-size:12px; color:var(--ink-muted);}
+  .stopwatch{font-family:'IBM Plex Mono',monospace; font-size:14px; background:var(--surface-2); border-radius:8px; padding:5px 10px; color:var(--ink-muted);}
+
+  .section-tabs{display:flex; gap:6px; padding:12px 20px 0; flex-wrap:wrap;}
+  .stab{border:1px solid var(--line); background:var(--surface); border-radius:999px; padding:6px 13px; font-size:13px; color:var(--ink-muted);}
+  .stab.active{background:var(--accent-soft); border-color:var(--accent); color:var(--accent-ink); font-weight:600;}
+
+  .qwrap{padding:18px 20px 22px; display:flex; flex-direction:column; gap:16px;}
+  .qmeta{display:flex; justify-content:space-between; align-items:center; font-size:12.5px; color:var(--ink-muted); gap:8px; flex-wrap:wrap;}
+  .qmeta .part{font-weight:600; color:var(--accent-ink);}
+  .qmeta .prog{font-family:'IBM Plex Mono',monospace;}
+  .bar{height:5px; border-radius:99px; background:var(--surface-2); overflow:hidden;}
+  .bar > i{display:block; height:100%; background:var(--accent); border-radius:99px; transition:width .2s ease;}
+
+  .audio-row{display:flex; align-items:center; gap:10px;}
+  .playbtn{display:flex; align-items:center; gap:8px; background:var(--accent-soft); color:var(--accent-ink); border:1px solid var(--accent); border-radius:999px; padding:10px 18px; font-weight:600; font-size:14.5px;}
+  .playbtn:hover{opacity:.9;}
+  .replaycount{font-size:12.5px; color:var(--ink-muted);}
+
+  .passage{background:var(--surface-2); border-radius:10px; padding:14px 16px; font-size:16.5px; line-height:1.8; color:var(--ink);}
+  .qtext{font-size:17px; line-height:1.6; font-weight:500;}
+  .qtext .han{font-size:19px;}
+
+  .opts{display:flex; flex-direction:column; gap:8px;}
+  .opt{display:flex; align-items:center; gap:11px; border:1.5px solid var(--line); border-radius:9px; padding:11px 14px; background:var(--surface); font-size:15px; text-align:left; color:var(--ink);}
+  .opt:hover{border-color:var(--accent);}
+  .opt .letter{width:24px; height:24px; border-radius:50%; border:1.5px solid var(--line); display:grid; place-content:center; font-family:'IBM Plex Mono',monospace; font-size:12px; font-weight:600; flex:none; color:var(--ink-muted);}
+  .opt.selected{border-color:var(--accent); background:var(--accent-soft);}
+  .opt.selected .letter{border-color:var(--accent); background:var(--accent); color:var(--surface);}
+  .opt.correct{border-color:var(--good); background:var(--good-soft);}
+  .opt.correct .letter{border-color:var(--good); background:var(--good); color:var(--surface);}
+  .opt.wrong{border-color:var(--bad); background:var(--bad-soft);}
+  .opt.wrong .letter{border-color:var(--bad); background:var(--bad); color:var(--surface);}
+  .opt:disabled{cursor:default;}
+
+  .navrow{display:flex; justify-content:space-between; align-items:center; gap:10px; padding-top:4px;}
+  .btn{border:1px solid var(--line); background:var(--surface); border-radius:8px; padding:9px 16px; font-size:14px; font-weight:600; color:var(--ink);}
+  .btn:hover{border-color:var(--accent);}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:var(--surface);}
+  .btn.primary:hover{opacity:.9;}
+  .btn:disabled{opacity:.45; cursor:not-allowed;}
+
+  .wtask{border-top:1px solid var(--line); padding:18px 20px;}
+  .wtask:first-child{border-top:none;}
+  .wtask h3{font-size:15px; font-weight:600; margin-bottom:6px;}
+  .wtask .prompt{font-size:14.5px; color:var(--ink-muted); margin-bottom:10px; line-height:1.5;}
+  .chips{display:flex; flex-wrap:wrap; gap:7px; margin-bottom:10px;}
+  .chip{background:var(--surface-2); border:1px solid var(--line); border-radius:7px; padding:6px 11px; font-size:16px;}
+  textarea, input.ans{width:100%; border:1.5px solid var(--line); border-radius:8px; padding:10px 12px; font-size:15px; font-family:'Source Sans 3',sans-serif; background:var(--surface); color:var(--ink); resize:vertical;}
+  textarea:focus, input.ans:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent);}
+  .reveal{margin-top:10px; background:var(--accent-soft); border-radius:8px; padding:10px 13px; font-size:14px; color:var(--accent-ink); line-height:1.55;}
+
+  .results{padding:20px; display:flex; flex-direction:column; gap:16px;}
+  .score-hero{display:flex; align-items:center; gap:18px; flex-wrap:wrap;}
+  .score-num{font-family:'Fraunces',serif; font-size:44px; font-weight:600; line-height:1;}
+  .score-sub{color:var(--ink-muted); font-size:13.5px;}
+  .review-item{display:flex; gap:10px; padding:10px 0; border-top:1px solid var(--line); font-size:14px;}
+  .review-item:first-child{border-top:none;}
+  .ri-mark{width:20px; flex:none; font-weight:700;}
+  .ri-mark.ok{color:var(--good);} .ri-mark.no{color:var(--bad);}
+  .ri-body .ri-q{font-weight:500;}
+  .ri-body .ri-a{color:var(--ink-muted); font-size:13px; margin-top:2px;}
+
+  footer{color:var(--ink-muted); font-size:12px; text-align:center; line-height:1.6; padding-top:4px;}
+  footer a{color:var(--ink-muted);}
+
+  @media (max-width:480px){
+    .exam-head{flex-direction:column; align-items:flex-start;}
+    .navrow{flex-wrap:wrap;}
+  }
+</style>
+</head>
+<body>
+<nav class="toolkit-nav">
+  <div class="toolkit-nav-inner">
+    <a class="toolkit-brand" href="../">← CSC China Toolkit</a>
+    <span class="toolkit-current">Simulado HSK</span>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <div class="top" id="homeHead">
+    <div class="eyebrow">Prática · HSK 1 a 6</div>
+    <h1>Simulado HSK</h1>
+    <p class="sub">Cada nível aqui tem o mesmo número de questões e as mesmas partes/tipos da prova oficial (audição, leitura e — do HSK3 pra cima — escrita), com conteúdo original. Só uma adaptação: partes que na prova real usam imagens (ex. "escolha o desenho certo") viram aqui uma frase equivalente em texto, já que não há banco de imagens. Pra provas oficiais reais com áudio original, veja o <a href="https://improvemandarin.com/hsk-practice-test/" target="_blank" rel="noopener noreferrer">acervo do ImproveMandarin</a> ou o <a href="https://www.digmandarin.com/hsk-practice-test" target="_blank" rel="noopener noreferrer">banco do DigMandarin</a>.</p>
+  </div>
+
+  <div class="levels" id="levelGrid"></div>
+
+  <section class="sheet" id="examView" hidden>
+    <div class="exam-head">
+      <div class="exam-head-left">
+        <button class="back" id="btnHome">← Níveis</button>
+        <div>
+          <div class="exam-title" id="examTitle">HSK 1</div>
+          <div class="exam-sub" id="examSub">Audição</div>
+        </div>
+      </div>
+      <div class="stopwatch mono" id="stopwatch">00:00</div>
+    </div>
+    <div class="section-tabs" id="sectionTabs"></div>
+    <div id="qArea"></div>
+  </section>
+
+  <section class="sheet" id="resultsView" hidden>
+    <div class="results" id="resultsBody"></div>
+  </section>
+
+  <footer>Conteúdo original de prática, inspirado na estrutura real do HSK — não é a prova oficial. Progresso salvo só neste navegador.</footer>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const LEVELS = [
+  {id:1, words:150, blurb:'Frases básicas: cumprimentos, números, família.'},
+  {id:2, words:300, blurb:'Rotina diária, comparações simples, planos.'},
+  {id:3, words:600, blurb:'Comunicação do dia a dia, passado e futuro.'},
+  {id:4, words:1200, blurb:'Opiniões, causa e efeito, temas mais amplos.'},
+  {id:5, words:2500, blurb:'Notícias, textos abstratos, gramática avançada.'},
+  {id:6, words:5000, blurb:'Fluência quase nativa, idiomas, redação formal.'},
+];
+const REAL_TOTALS = {1:40, 2:60, 3:80, 4:100, 5:100, 6:101};
+
+function tag(arr, part){ arr.forEach(x => x.part = part); return arr; }
+
+const EXAM = {};
+
+/* =============== HSK 1 (40 = 20 audição + 20 leitura) =============== */
+EXAM[1] = { listening: [
+  ...tag([
+    {audio:"我是学生。", q:"他是老师。", options:["Certo","Errado"], correct:1},
+    {audio:"今天很冷。", q:"今天天气很冷。", options:["Certo","Errado"], correct:0},
+    {audio:"我喜欢喝茶。", q:"他喜欢喝咖啡。", options:["Certo","Errado"], correct:1},
+    {audio:"现在是三点。", q:"现在是三点。", options:["Certo","Errado"], correct:0},
+    {audio:"这是我的书,不是他的。", q:"这本书是他的。", options:["Certo","Errado"], correct:1},
+  ], "Parte 1 · Certo ou errado"),
+  ...tag([
+    {audio:"我的猫很可爱。", q:"哪句符合内容?", options:["猫很可爱","猫很大","猫不见了","猫生病了"], correct:0},
+    {audio:"外面在下雨。", q:"哪句符合内容?", options:["外面下雨","外面晴天","外面很热","外面下雪"], correct:0},
+    {audio:"他有两个儿子。", q:"哪句符合内容?", options:["他有两个儿子","他有一个女儿","他没有孩子","他有三个孩子"], correct:0},
+    {audio:"这件衣服是红色的。", q:"哪句符合内容?", options:["衣服是红色的","衣服是白色的","衣服很贵","衣服是新的"], correct:0},
+    {audio:"我每天七点起床。", q:"哪句符合内容?", options:["他七点起床","他八点起床","他不起床","他六点睡觉"], correct:0},
+  ], "Parte 2 · Escolha a frase certa"),
+  ...tag([
+    {audio:"A:你好,我叫王明。 B:你好!", q:"男的叫什么名字?", options:["王明","李红","张伟","小李"], correct:0},
+    {audio:"A:这是谁的书? B:是我的。", q:"书是谁的?", options:["我的","他的","老师的","朋友的"], correct:0},
+    {audio:"A:你去哪儿? B:我去学校。", q:"她去哪儿?", options:["学校","商店","医院","家"], correct:0},
+    {audio:"A:现在几点? B:三点。", q:"现在几点?", options:["两点","三点","四点","五点"], correct:1},
+    {audio:"A:你喜欢喝什么? B:我喜欢喝茶。", q:"他喜欢喝什么?", options:["水","茶","牛奶","咖啡"], correct:1},
+  ], "Parte 3 · Diálogo curto"),
+  ...tag([
+    {audio:"你叫什么名字?", q:"哪个是合适的回答?", options:["我叫李明。","我很好。","五点。","苹果。"], correct:0},
+    {audio:"你是哪国人?", q:"哪个是合适的回答?", options:["我是巴西人。","我很忙。","今天。","很贵。"], correct:0},
+    {audio:"今天星期几?", q:"哪个是合适的回答?", options:["星期三。","很好。","我不去。","在家里。"], correct:0},
+    {audio:"你家有几口人?", q:"哪个是合适的回答?", options:["四口人。","很漂亮。","在学校。","不知道。"], correct:0},
+    {audio:"这个多少钱?", q:"哪个是合适的回答?", options:["十块钱。","很好吃。","是的。","不去。"], correct:0},
+  ], "Parte 4 · Pergunta e resposta"),
+], reading: [
+  ...tag([
+    {q:"想表达“天气很冷”,应该说哪句?", han:"", options:["今天很冷。","今天很热。","今天下雨。","今天很好。"], correct:0},
+    {q:"想表达“我很饿,要吃饭”,应该说哪句?", han:"", options:["我饿了,想吃饭。","我很累。","我要睡觉。","我很高兴。"], correct:0},
+    {q:"想表达“谢谢你的帮助”,应该说哪句?", han:"", options:["谢谢你帮我。","对不起。","再见。","没关系。"], correct:0},
+    {q:"想表达“我不知道答案”,应该说哪句?", han:"", options:["我不知道。","我知道。","我是老师。","我很好。"], correct:0},
+    {q:"想表达“现在是晚上”,应该说哪句?", han:"", options:["现在是晚上。","现在是早上。","现在是中午。","现在是下午。"], correct:0},
+  ], "Parte 1 · Escolha a frase certa"),
+  ...tag([
+    {q:"描述:他是医生。 句子:他在医院工作。", han:"", options:["Certo","Errado"], correct:0},
+    {q:"描述:她是学生。 句子:她每天上班。", han:"", options:["Certo","Errado"], correct:1},
+    {q:"描述:今天下雪。 句子:今天天气很冷。", han:"", options:["Certo","Errado"], correct:0},
+    {q:"描述:我家有五口人。 句子:我家只有我一个人。", han:"", options:["Certo","Errado"], correct:1},
+    {q:"描述:他喜欢喝茶。 句子:他常常喝茶。", han:"", options:["Certo","Errado"], correct:0},
+  ], "Parte 2 · Certo ou errado"),
+  ...tag([
+    {q:"A:你好! B:___", han:"", options:["你好!","再见!","谢谢!","对不起!"], correct:0},
+    {q:"A:谢谢你! B:___", han:"", options:["不客气。","再见。","你好。","是的。"], correct:0},
+    {q:"A:你叫什么名字? B:___", han:"", options:["我叫李明。","我很好。","五点。","在家。"], correct:0},
+    {q:"A:这个多少钱? B:___", han:"", options:["十块钱。","很好吃。","是的。","不知道。"], correct:0},
+    {q:"A:你是哪国人? B:___", han:"", options:["我是巴西人。","我很忙。","今天。","很贵。"], correct:0},
+  ], "Parte 3 · Complete o diálogo"),
+  ...tag([
+    {q:"我 ___ 中国人。", han:"我 ___ 中国人。", options:["是","有","在","去"], correct:0},
+    {q:"这个苹果很 ___。 (\"gostosa\")", han:"这个苹果很 ___。", options:["大","好吃","高","长"], correct:1},
+    {q:"今天天气很 ___。 (\"frio\")", han:"今天天气很 ___。", options:["冷","书","水","猫"], correct:0},
+    {q:"我家有五口 ___。", han:"我家有五口 ___。", options:["人","书","水","车"], correct:0},
+    {q:"他 ___ 在北京。 (\"mora\")", han:"他 ___ 在北京。", options:["住","吃","看","写"], correct:0},
+  ], "Parte 4 · Complete a frase"),
+], writing: [] };
+
+/* =============== HSK 2 (60 = 35 audição + 25 leitura) =============== */
+EXAM[2] = { listening: [
+  ...tag([
+    {audio:"我昨天去了图书馆。", q:"他昨天去了图书馆。", options:["Certo","Errado"], correct:0},
+    {audio:"这件衣服比那件贵。", q:"那件衣服比这件贵。", options:["Certo","Errado"], correct:1},
+    {audio:"你会说英语吗?会一点儿。", q:"他完全不会说英语。", options:["Certo","Errado"], correct:1},
+    {audio:"我觉得这个电影很有意思。", q:"他觉得电影很无聊。", options:["Certo","Errado"], correct:1},
+    {audio:"妹妹比我小两岁。", q:"妹妹比他大。", options:["Certo","Errado"], correct:1},
+    {audio:"医院在银行旁边。", q:"医院在银行旁边。", options:["Certo","Errado"], correct:0},
+    {audio:"外面下雪了,很冷。", q:"外面天气很热。", options:["Certo","Errado"], correct:1},
+    {audio:"他每天早上跑步。", q:"他每天早上跑步。", options:["Certo","Errado"], correct:0},
+    {audio:"这道菜有点儿辣。", q:"这道菜一点也不辣。", options:["Certo","Errado"], correct:1},
+    {audio:"我们下午三点在公园见面。", q:"他们约好三点见面。", options:["Certo","Errado"], correct:0},
+  ], "Parte 1 · Certo ou errado"),
+  ...tag([
+    {audio:"请问,火车站怎么走?", q:"哪句符合内容?", options:["他在问路","他在买票","他在等车","他在看地图"], correct:0},
+    {audio:"我把作业忘在家里了。", q:"哪句符合内容?", options:["作业忘在家里","作业做完了","作业丢了","还没写作业"], correct:0},
+    {audio:"这个箱子太重了,我拿不动。", q:"哪句符合内容?", options:["箱子太重拿不动","箱子很轻","箱子丢了","箱子是空的"], correct:0},
+    {audio:"他决定明年去中国留学。", q:"哪句符合内容?", options:["他打算去中国留学","他已经在中国","他不想留学","他去日本留学"], correct:0},
+    {audio:"这个周末我要去旅游。", q:"哪句符合内容?", options:["周末打算旅游","周末要工作","周末要考试","周末在家休息"], correct:0},
+    {audio:"他的房间又大又干净。", q:"哪句符合内容?", options:["房间又大又干净","房间很小很脏","房间没有窗户","房间很旧"], correct:0},
+    {audio:"我的中文水平提高了很多。", q:"哪句符合内容?", options:["中文水平提高了","中文水平下降了","没有学中文","中文水平没变"], correct:0},
+    {audio:"飞机马上就要起飞了。", q:"哪句符合内容?", options:["飞机快起飞了","飞机已经降落","航班取消了","飞机延误了"], correct:0},
+    {audio:"他每个星期都去健身房。", q:"哪句符合内容?", options:["每周去健身房","从不运动","每天去健身房","去过一次健身房"], correct:0},
+    {audio:"这家餐厅的服务很好。", q:"哪句符合内容?", options:["服务很好","服务不好","已经关门","很难吃"], correct:0},
+  ], "Parte 2 · Escolha a frase certa"),
+  ...tag([
+    {audio:"A:你昨天去哪儿了? B:我去了图书馆。", q:"他昨天去哪儿了?", options:["学校","图书馆","公司","医院"], correct:1},
+    {audio:"A:这件多少钱? B:比那件贵一点。", q:"哪件更贵?", options:["这件","那件","一样贵","不知道"], correct:0},
+    {audio:"A:你会说英语吗? B:会一点儿。", q:"他英语怎么样?", options:["不会","会一点儿","很流利","完全不懂"], correct:1},
+    {audio:"A:这个电影怎么样? B:我觉得很有意思。", q:"他觉得电影怎样?", options:["很无聊","一般","很有意思","很难看"], correct:2},
+    {audio:"A:你和妹妹谁大? B:我比她大两岁。", q:"谁更大?", options:["妹妹","他","一样大","不知道"], correct:1},
+    {audio:"A:附近有超市吗? B:有,在银行旁边。", q:"超市在哪儿?", options:["银行旁边","学校前面","公园里","医院后面"], correct:0},
+    {audio:"A:你晚上睡得好吗? B:没睡好,一直做梦。", q:"他昨晚睡得怎样?", options:["很好","没睡好","没睡","睡了很久"], correct:1},
+    {audio:"A:你会什么乐器? B:我会弹钢琴,也会唱歌。", q:"他有什么爱好?", options:["弹钢琴唱歌","跳舞画画","写作读书","游泳跑步"], correct:0},
+    {audio:"A:这道菜辣不辣? B:有点儿辣。", q:"这道菜味道怎样?", options:["很甜","有点辣","很淡","很酸"], correct:1},
+    {audio:"A:你们几点见面? B:下午三点,在公园。", q:"他们几点见面?", options:["两点","三点","四点","五点"], correct:1},
+  ], "Parte 3 · Diálogo curto"),
+  ...tag([
+    {audio:"A:你怎么这么晚才到? B:路上堵车了,而且我还找错了地铁站。", q:"他为什么迟到?", options:["堵车加找错车站","睡过头","忘记时间","生病了"], correct:0},
+    {audio:"A:考试准备得怎么样了? B:还可以,不过数学部分我还需要多复习。", q:"他觉得哪部分需要多复习?", options:["数学","语文","英语","历史"], correct:0},
+    {audio:"A:周末有什么计划吗? B:我打算先去超市买东西,然后在家休息。", q:"他周末先做什么?", options:["去超市","休息","看电影","工作"], correct:0},
+    {audio:"A:你觉得这份工作怎么样? B:挺好的,同事也都很友好,就是有点儿累。", q:"他对这份工作的感觉是?", options:["很好但有点累","很差","无所谓","非常轻松"], correct:0},
+    {audio:"A:你的中文进步很大啊! B:谢谢,我每天都花时间练习听力和口语。", q:"他每天练习什么?", options:["听力和口语","写作和阅读","语法和词汇","翻译"], correct:0},
+  ], "Parte 4 · Diálogo mais longo"),
+], reading: [
+  ...tag([
+    {q:"想说“今天真冷”应该怎么说?", han:"", options:["今天真冷。","今天真热。","我很饿。","我很困。"], correct:0},
+    {q:"想问“现在几点”应该怎么说?", han:"", options:["现在几点?","你叫什么?","多少钱?","在哪儿?"], correct:0},
+    {q:"想表达感谢应该怎么说?", han:"", options:["谢谢你。","对不起。","再见。","没关系。"], correct:0},
+    {q:"想道歉应该怎么说?", han:"", options:["对不起。","谢谢你。","你好。","再见。"], correct:0},
+    {q:"想邀请别人一起吃饭应该怎么说?", han:"", options:["我们一起吃饭吧。","我很忙。","再见。","对不起。"], correct:0},
+  ], "Parte 1 · Escolha a frase certa"),
+  ...tag([
+    {q:"描述:他每天骑自行车上班。 句子:他从不骑车。", han:"", options:["Certo","Errado"], correct:1},
+    {q:"描述:这本书是借的。 句子:这本书不是买的。", han:"", options:["Certo","Errado"], correct:0},
+    {q:"描述:窗户开着,外面很冷。 句子:他觉得应该关窗户。", han:"", options:["Certo","Errado"], correct:0},
+    {q:"描述:他工作很忙,没时间休息。 句子:他很闲。", han:"", options:["Certo","Errado"], correct:1},
+    {q:"描述:他辞职去旅行了。 句子:他还在原来的公司工作。", han:"", options:["Certo","Errado"], correct:1},
+  ], "Parte 2 · Certo ou errado"),
+  ...tag([
+    {q:"A:这个周末你有空吗? B:___", han:"", options:["有空,怎么了?","是的,谢谢。","不客气。","再见。"], correct:0},
+    {q:"A:麻烦你帮我一个忙。 B:___", han:"", options:["没问题。","对不起。","谢谢你。","再见。"], correct:0},
+    {q:"A:你什么时候回国? B:___", han:"", options:["下个月。","很好。","在家。","是的。"], correct:0},
+    {q:"A:这附近有银行吗? B:___", han:"", options:["有,往前走就是。","不知道叫什么。","是的,谢谢。","再见。"], correct:0},
+    {q:"A:你觉得这个方法怎么样? B:___", han:"", options:["我觉得不错。","五点半。","在公司。","不客气。"], correct:0},
+  ], "Parte 3 · Complete o diálogo"),
+  ...tag([
+    {q:"我的汉语说得不太 ___。", han:"我的汉语说得不太 ___。", options:["好","快","新","远"], correct:0},
+    {q:"你 ___ 去过北京吗?", han:"你 ___ 去过北京吗?", options:["以前","明天","后来","一起"], correct:0},
+    {q:"他工作很忙,___ 没有时间休息。", han:"他工作很忙,___ 没有时间休息。", options:["所以","因为","但是","而且"], correct:0},
+    {q:"这本书是 ___ 的,不是买的。", han:"这本书是 ___ 的,不是买的。", options:["借","卖","送","看"], correct:0},
+    {q:"请把窗户 ___ 上,外面太冷了。", han:"请把窗户 ___ 上,外面太冷了。", options:["关","开","打","放"], correct:0},
+    {q:"", han:"小明每天下课后先做作业,再看电视。", passage:true, sub:"小明先做什么?", options:["看电视","做作业","吃饭","睡觉"], correct:1},
+    {q:"", han:"这家商店周末不营业。", passage:true, sub:"周末能不能去这家商店?", options:["能","不能","不知道","有时候"], correct:1},
+    {q:"这个电影的票已经 ___ 了。", han:"这个电影的票已经 ___ 了。", options:["卖完","买完","看完","写完"], correct:0},
+    {q:"", han:"他虽然很累,但还是坚持完成了工作。", passage:true, sub:"他做完工作了吗?", options:["做完了","没做完","放弃了","还没开始"], correct:0},
+    {q:"", han:"他把手机放在桌子上,就出去了。", passage:true, sub:"手机现在在哪儿?", options:["桌子上","包里","口袋里","车上"], correct:0},
+  ], "Parte 4 · Compreensão de leitura"),
+], writing: [] };
+
+/* =============== HSK 3 (80 = 40 audição + 30 leitura + 10 escrita) =============== */
+EXAM[3] = { listening: [
+  ...tag([
+    {audio:"虽然今天很冷,但是我还是去跑步了。", q:"他今天没有运动。", options:["Certo","Errado"], correct:1},
+    {audio:"这次考试比上次难多了。", q:"这次考试比上次简单。", options:["Certo","Errado"], correct:1},
+    {audio:"医生说我需要多运动,少吃甜的。", q:"医生建议他多吃甜食。", options:["Certo","Errado"], correct:1},
+    {audio:"会议改到明天下午三点了。", q:"会议时间提前了。", options:["Certo","Errado"], correct:1},
+    {audio:"她终于找到了一份满意的工作。", q:"她对新工作很满意。", options:["Certo","Errado"], correct:0},
+    {audio:"由于堵车,他上班迟到了。", q:"他迟到是因为堵车。", options:["Certo","Errado"], correct:0},
+    {audio:"他把房间打扫得很干净。", q:"他的房间很脏。", options:["Certo","Errado"], correct:1},
+    {audio:"她因为生病请了三天假。", q:"她请假是因为要旅游。", options:["Certo","Errado"], correct:1},
+    {audio:"他工作认真,大家都很信任他。", q:"大家都不信任他。", options:["Certo","Errado"], correct:1},
+    {audio:"这条路正在修,我们得绕路。", q:"他们需要绕路。", options:["Certo","Errado"], correct:0},
+  ], "Parte 1 · Certo ou errado"),
+  ...tag([
+    {audio:"我们打算下星期去爬山。", q:"哪句符合内容?", options:["打算去爬山","打算去游泳","已经爬完山","不想出门"], correct:0},
+    {audio:"这本小说我已经看了三遍了。", q:"哪句符合内容?", options:["看了三遍小说","没看过这本书","只看了一遍","正在写小说"], correct:0},
+    {audio:"他跟朋友借了一些钱。", q:"哪句符合内容?", options:["向朋友借钱","借钱给朋友","还了朋友钱","存钱在银行"], correct:0},
+    {audio:"这家店的东西又便宜又好。", q:"哪句符合内容?", options:["东西便宜又好","东西贵又差","店已关门","东西很一般"], correct:0},
+    {audio:"她把这个好消息告诉了所有朋友。", q:"哪句符合内容?", options:["告诉了朋友消息","隐藏了消息","忘记了消息","不相信消息"], correct:0},
+    {audio:"他因为工作原因搬到了上海。", q:"哪句符合内容?", options:["因工作搬家","因结婚搬家","因上学搬家","没有搬家"], correct:0},
+    {audio:"这个地方我从来没去过。", q:"哪句符合内容?", options:["从没去过那里","去过很多次","去过一次","记不清了"], correct:0},
+    {audio:"他每次说话都很有礼貌。", q:"哪句符合内容?", options:["说话有礼貌","说话没礼貌","很少说话","说话很骄傲"], correct:0},
+    {audio:"她收到礼物后非常开心。", q:"哪句符合内容?", options:["收到礼物很开心","收到礼物很生气","没收到礼物","礼物丢了"], correct:0},
+    {audio:"由于时间不够,我们只能先讨论到这里。", q:"哪句符合内容?", options:["时间不够停止讨论","讨论完成了","没有时间限制","一直在讨论"], correct:0},
+  ], "Parte 2 · Escolha a frase certa"),
+  ...tag([
+    {audio:"A:你的手机呢? B:我忘在家里了。", q:"手机在哪儿?", options:["包里","家里","车上","丢了"], correct:1},
+    {audio:"A:你怎么还没走? B:我在等公交车。", q:"他在做什么?", options:["等公交车","等朋友","等出租车","走路"], correct:0},
+    {audio:"A:这次谈判怎么样? B:还有分歧,得再谈一次。", q:"谈判结果如何?", options:["已达成协议","还有分歧","彻底失败","取消了"], correct:1},
+    {audio:"A:你觉得这个方案行吗? B:我觉得不太现实。", q:"他对方案的看法?", options:["很现实","不太现实","非常好","没意见"], correct:1},
+    {audio:"A:周末你在家吗? B:不在,我要去看电影。", q:"他周末打算做什么?", options:["在家","看电影","上班","睡觉"], correct:1},
+    {audio:"A:这个包是你的吗? B:不是,是我朋友的。", q:"包是谁的?", options:["我的","朋友的","老师的","不知道"], correct:1},
+    {audio:"A:你今天为什么迟到? B:堵车了。", q:"他迟到的原因?", options:["睡过头","堵车","忘记时间","生病"], correct:1},
+    {audio:"A:老板对方案满意吗? B:很满意。", q:"老板的态度是?", options:["不满意","很满意","没意见","生气"], correct:1},
+    {audio:"A:你每天锻炼吗? B:是的,坚持一个小时。", q:"她每天做什么?", options:["看电视","锻炼一小时","睡懒觉","工作"], correct:1},
+    {audio:"A:这个字怎么读? B:我也不知道。", q:"B知道怎么读吗?", options:["知道","不知道","知道一半","忘记了"], correct:1},
+  ], "Parte 3 · Diálogo curto"),
+  ...tag([
+    {audio:"A:你怎么看起来不太高兴? B:今天工作上出了点问题,老板批评了我。", q:"他为什么不高兴?", options:["被老板批评","生病了","没吃饭","没睡好"], correct:0},
+    {audio:"A:这次旅行你打算去哪儿? B:我还没决定,可能去云南,也可能去四川。", q:"他的旅行计划怎样?", options:["已经决定去云南","还没决定","决定不去了","已经去过了"], correct:1},
+    {audio:"A:你的汉语进步很快啊。 B:谢谢,我每天都花时间练习。", q:"他进步快的原因是?", options:["天赋好","每天练习","上补习班","不知道"], correct:1},
+    {audio:"A:这份工作压力大吗? B:挺大的,不过我慢慢适应了。", q:"他现在对工作的感觉?", options:["还没适应","慢慢适应了","完全不适应","换工作了"], correct:1},
+    {audio:"A:这道题你会做吗? B:一开始不会,后来老师讲解后就明白了。", q:"他现在明白这道题了吗?", options:["还是不会","明白了","放弃了","忘记了"], correct:1},
+    {audio:"A:周末的聚会你能来吗? B:可以,不过我可能会晚到一会儿。", q:"他能参加周末的聚会吗?", options:["不能来","能来但会晚到","准时到","不确定"], correct:1},
+    {audio:"A:你觉得这个城市怎么样? B:环境不错,就是交通有点儿堵。", q:"他对这个城市的评价?", options:["环境差交通好","环境好交通堵","什么都不好","什么都很好"], correct:1},
+    {audio:"A:你什么时候开始学做饭的? B:大学的时候,因为想家里的味道。", q:"他为什么开始学做饭?", options:["工作需要","想家里的味道","朋友建议","兴趣爱好"], correct:1},
+    {audio:"A:这次面试感觉怎么样? B:还可以,不过有几个问题我回答得不太好。", q:"他对面试的感觉?", options:["非常满意","还可以但有不足","很失败","完全没准备"], correct:1},
+    {audio:"A:你为什么想学中文? B:因为我打算去中国留学,想更好地融入生活。", q:"他学中文的原因?", options:["工作要求","打算去中国留学","兴趣爱好","家人要求"], correct:1},
+  ], "Parte 4 · Diálogo mais longo"),
+], reading: [
+  ...tag([
+    {q:"“虽然今天很冷,”后面接哪句最合适?", han:"", options:["但是我还是出门了。","所以我很开心。","因为我很累。","于是我睡觉了。"], correct:0},
+    {q:"“他工作很努力,”后面接哪句最合适?", han:"", options:["所以升职了。","但是没吃饭。","因为下雨了。","于是他哭了。"], correct:0},
+    {q:"“这道题太难了,”后面接哪句最合适?", han:"", options:["我怎么想也想不出来。","我马上就写完了。","天气很好。","他去旅游了。"], correct:0},
+    {q:"“她每天坚持锻炼,”后面接哪句最合适?", han:"", options:["身体越来越好。","从不运动。","不喜欢运动。","身体越来越差。"], correct:0},
+    {q:"“因为堵车,”后面接哪句最合适?", han:"", options:["他上班迟到了。","他很快就到了。","天气很好。","他很开心。"], correct:0},
+    {q:"“这本书很有意思,”后面接哪句最合适?", han:"", options:["我一口气看完了。","我一点也不想看。","我把它扔了。","我没有买。"], correct:0},
+    {q:"“虽然他经验不多,”后面接哪句最合适?", han:"", options:["但是学得很快。","所以经验丰富。","因为很努力。","于是辞职了。"], correct:0},
+    {q:"“她终于毕业了,”后面接哪句最合适?", han:"", options:["全家人都很高兴。","全家人都很生气。","她很失望。","她决定放弃。"], correct:0},
+    {q:"“由于时间紧张,”后面接哪句最合适?", han:"", options:["我们只能加快速度。","我们可以慢慢来。","没有任何影响。","计划取消了。"], correct:0},
+    {q:"“这个消息传开后,”后面接哪句最合适?", han:"", options:["大家都很吃惊。","没有人知道。","没有任何反应。","消息被删除了。"], correct:0},
+  ], "Parte 1 · Relacione as frases"),
+  ...tag([
+    {q:"我们已经努力了,结果 ___ 不理想。", han:"我们已经努力了,结果 ___ 不理想。", options:["但是","所以","而且","虽然"], correct:0},
+    {q:"他一边听音乐,___ 做作业。", han:"他一边听音乐,___ 做作业。", options:["一边","一起","一直","一定"], correct:0},
+    {q:"这个问题太复杂了,我怎么想 ___ 想不明白。", han:"这个问题太复杂了,我怎么想 ___ 想不明白。", options:["都","也","就","才"], correct:1},
+    {q:"他学习汉语已经 ___ 三年了。", han:"他学习汉语已经 ___ 三年了。", options:["有","是","在","去"], correct:0},
+    {q:"这次比赛他 ___ 获得了第一名。", han:"这次比赛他 ___ 获得了第一名。", options:["终于","一直","常常","从不"], correct:0},
+    {q:"我们 ___ 讨论了很久,才做出决定。", han:"我们 ___ 讨论了很久,才做出决定。", options:["已经","还","才","又"], correct:0},
+    {q:"他每次 ___ 迟到,老师都很生气。", han:"他每次 ___ 迟到,老师都很生气。", options:["一","都","就","才"], correct:1},
+    {q:"她说的话让我 ___ 很感动。", han:"她说的话让我 ___ 很感动。", options:["非常","一点","几乎","从不"], correct:0},
+    {q:"无论多忙,他 ___ 坚持锻炼身体。", han:"无论多忙,他 ___ 坚持锻炼身体。", options:["都","也","还","又"], correct:0},
+    {q:"只要努力,___ 能成功。", han:"只要努力,___ 能成功。", options:["就","才","又","还"], correct:0},
+  ], "Parte 2 · Complete a frase"),
+  ...tag([
+    {q:"", han:"小李每天早上七点起床,先跑步半个小时,然后吃早饭去上班。", passage:true, sub:"小李先做什么?", options:["吃早饭","跑步","上班","睡觉"], correct:1},
+    {q:"", han:"这家饭馆的菜很好吃,但是服务有点儿慢。", passage:true, sub:"关于这家饭馆,下面哪个对?", options:["菜不好吃","服务很快","菜好服务慢","已经关门"], correct:2},
+    {q:"", han:"张老师对学生们很有耐心,大家都很喜欢她。", passage:true, sub:"学生们对张老师的态度是?", options:["不喜欢","很喜欢","害怕","不了解"], correct:1},
+    {q:"", han:"她虽然工作很忙,但每天都抽时间陪孩子。", passage:true, sub:"她每天做什么?", options:["加班到很晚","抽时间陪孩子","不管孩子","旅游"], correct:1},
+    {q:"", han:"这个城市的交通越来越方便了。", passage:true, sub:"这段话主要讲什么?", options:["交通变方便","交通变差","城市变小","人口减少"], correct:0},
+    {q:"", han:"他决定放弃这份高薪工作,去追求自己的梦想。", passage:true, sub:"他做了什么决定?", options:["继续工作","放弃工作追梦想","换工作","退休"], correct:1},
+    {q:"", han:"这道菜的做法并不复杂,只需要几个简单的步骤。", passage:true, sub:"这道菜怎么样?", options:["做法复杂","做法简单","没人会做","很贵"], correct:1},
+    {q:"", han:"她把所有的时间都用在学习上,几乎没有娱乐。", passage:true, sub:"她的生活状态是?", options:["大部分时间娱乐","几乎都在学习","不学习","工作很忙"], correct:1},
+    {q:"", han:"他坚持每天写日记,已经写了十年。", passage:true, sub:"他坚持做了多久?", options:["一年","五年","十年","一直没停"], correct:2},
+    {q:"", han:"这次活动的目的是增进大家的友谊。", passage:true, sub:"这次活动的目的是什么?", options:["增进友谊","赚钱","竞争","惩罚"], correct:0},
+  ], "Parte 3 · Compreensão de leitura"),
+], writing: [
+  {type:'order', part:"Parte 1 · Organize a frase", words:["他","工作","很","认真"], answer:"他工作很认真。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["我","打算","明天","去","图书馆"], answer:"我打算明天去图书馆。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["这个","苹果","比","那个","贵"], answer:"这个苹果比那个贵。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["虽然","他","很忙","但是","还是","来了"], answer:"虽然他很忙,但是还是来了。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["医生","建议","我","多","运动"], answer:"医生建议我多运动。"},
+  {type:'char', part:"Parte 2 · Complete com o caractere", sentence:"我很（xǐhuan）吃苹果。", answer:"喜欢"},
+  {type:'char', part:"Parte 2 · Complete com o caractere", sentence:"他（zhèngzài）开会,不能接电话。", answer:"正在"},
+  {type:'char', part:"Parte 2 · Complete com o caractere", sentence:"这个（wèntí）有点儿复杂。", answer:"问题"},
+  {type:'char', part:"Parte 2 · Complete com o caractere", sentence:"她（zhōngyú）找到了工作。", answer:"终于"},
+  {type:'char', part:"Parte 2 · Complete com o caractere", sentence:"我们（yīqǐ）去看电影吧。", answer:"一起"},
+] };
+
+/* =============== HSK 4 (100 = 45 audição + 40 leitura + 15 escrita) =============== */
+EXAM[4] = { listening: [
+  ...tag([
+    {audio:"A:你怎么看起来这么累? B:昨晚加班到很晚,几乎没睡。", q:"男的为什么很累?", options:["生病了","加班到很晚","锻炼太多","没吃饭"], correct:1},
+    {audio:"A:这个项目谁负责? B:交给小王了。", q:"谁负责这个项目?", options:["小王","经理","客户","张总"], correct:0},
+    {audio:"A:会议几点开始? B:改到下午三点了。", q:"会议什么时候开始?", options:["上午","下午三点","晚上","明天"], correct:1},
+    {audio:"A:他去哪儿了? B:出差了,下周才回来。", q:"他什么时候回来?", options:["今天","明天","下周","不知道"], correct:2},
+    {audio:"A:这份合同签了吗? B:双方已经签字确认了。", q:"合同现在的状态?", options:["还没签","已签字确认","被取消","正在讨论"], correct:1},
+    {audio:"A:他的建议怎么样? B:被领导采纳了。", q:"领导对建议的态度?", options:["拒绝","采纳","忽视","批评"], correct:1},
+    {audio:"A:比赛结果如何? B:完全出乎意料。", q:"比赛结果怎样?", options:["符合预期","出乎意料","提前结束","取消了"], correct:1},
+    {audio:"A:他工作安排得怎么样? B:井井有条。", q:"他的工作安排怎样?", options:["很混乱","井井有条","没有安排","经常出错"], correct:1},
+    {audio:"A:这个决定影响大吗? B:对公司未来影响深远。", q:"这个决定的影响是?", options:["没有影响","影响深远","影响很小","短期影响"], correct:1},
+    {audio:"A:他的态度怎么样? B:一直很谦虚。", q:"他的态度是怎样的?", options:["骄傲","谦虚","自大","冷漠"], correct:1},
+  ], "Parte 1 · Diálogo curto"),
+  ...tag([
+    {audio:"这次项目能不能成功,关键在于团队的配合。", q:"什么是项目成功的关键?", options:["资金","团队配合","时间","运气"], correct:1},
+    {audio:"他把钥匙忘在办公室了,只能等同事帮忙开门。", q:"他遇到了什么问题?", options:["钥匙丢了","忘在办公室","门坏了","同事不在"], correct:1},
+    {audio:"由于天气原因,今天的航班全部取消了。", q:"航班取消的原因是什么?", options:["飞机故障","天气原因","机场关闭","乘客太少"], correct:1},
+    {audio:"她一边工作一边读研究生,压力不小。", q:"她的生活状态是怎样的?", options:["只工作","只读书","工作学习都做压力大","很轻松"], correct:2},
+    {audio:"这个方案被大家一致否定了。", q:"大家对这个方案的态度是?", options:["一致同意","一致反对","意见不一","没有讨论"], correct:1},
+    {audio:"他做事总是拖到最后一刻才开始。", q:"他做事的习惯是?", options:["提前完成","拖延","按时","从不拖延"], correct:1},
+    {audio:"这项技术的应用大大提高了生产效率。", q:"这项技术带来了什么?", options:["降低效率","提高效率","没有影响","增加成本"], correct:1},
+    {audio:"他因为一时冲动做了错误的决定。", q:"他做错误决定的原因是?", options:["深思熟虑","一时冲动","别人建议","长期计划"], correct:1},
+    {audio:"面对困难,他从未想过放弃。", q:"他面对困难的态度?", options:["想过放弃","从未想过放弃","很快放弃了","无所谓"], correct:1},
+    {audio:"他的观点得到了大多数人的支持。", q:"大多数人对他观点的态度?", options:["反对","支持","无所谓","不了解"], correct:1},
+    {audio:"这次会议主要讨论了预算问题。", q:"会议主要讨论什么?", options:["人事问题","预算问题","市场问题","产品问题"], correct:1},
+    {audio:"他虽然经验不多,但学习能力很强。", q:"他的特点是?", options:["经验丰富","学习能力强","不爱学习","经验能力都差"], correct:1},
+    {audio:"由于市场需求变化,公司调整了生产计划。", q:"公司为什么调整计划?", options:["资金不足","市场需求变化","员工不够","政策要求"], correct:1},
+    {audio:"这次演讲给观众留下了深刻的印象。", q:"观众对演讲的印象?", options:["印象不深","印象深刻","没有印象","很失望"], correct:1},
+    {audio:"这场比赛的结果出乎所有人的意料。", q:"比赛结果怎么样?", options:["符合预期","出乎意料","提前结束","取消了"], correct:1},
+  ], "Parte 2 · Frase e pergunta"),
+  ...tag([
+    {audio:"这项政策受到了广泛的关注。", q:"这项政策的受关注程度?", options:["无人关注","广泛关注","少数人关注","已被遗忘"], correct:1},
+    {audio:"他通过不断努力,终于实现了自己的目标。", q:"他是如何实现目标的?", options:["靠运气","不断努力","别人帮助","偶然机会"], correct:1},
+    {audio:"这个消息让整个团队都振奋起来。", q:"团队的反应是?", options:["失落","振奋","冷漠","生气"], correct:1},
+    {audio:"A:这次培训你觉得有用吗? B:挺有用的,学到了不少新方法。", q:"他觉得培训怎么样?", options:["没用","挺有用","浪费时间","不确定"], correct:1},
+    {audio:"A:公司最近效益怎么样? B:比去年好多了,订单也增加了。", q:"公司今年效益如何?", options:["比去年差","比去年好","没有变化","即将倒闭"], correct:1},
+    {audio:"A:你对新同事印象如何? B:很不错,工作认真又好相处。", q:"新同事给他的印象?", options:["不好相处","认真好相处","很懒惰","不了解"], correct:1},
+    {audio:"A:这次活动参加的人多吗? B:比预想的多很多,场地都不够用了。", q:"参加活动的人数怎样?", options:["比预想少","比预想多很多","刚刚好","没人参加"], correct:1},
+    {audio:"A:这个产品市场反应如何? B:出乎意料地好,供不应求。", q:"产品的市场反应?", options:["反应冷淡","供不应求","一般","无人问津"], correct:1},
+    {audio:"A:你觉得这次改革效果怎样? B:短期内可能会有些阵痛,但长远来看是好事。", q:"说话人对改革的看法?", options:["完全负面","短期有阵痛长期是好事","毫无影响","立刻见效"], correct:1},
+    {audio:"A:他为什么突然辞职了? B:听说是想创业,追求自己的想法。", q:"他辞职的原因?", options:["被解雇","想创业","生病","被调岗"], correct:1},
+    {audio:"A:这次谈判达成协议了吗? B:经过反复沟通,最终达成了共识。", q:"谈判的结果?", options:["没有达成","最终达成共识","破裂了","无限期推迟"], correct:1},
+    {audio:"A:你怎么看这次的市场调查结果? B:结果显示消费者对新产品评价很高。", q:"市场调查结果显示什么?", options:["评价很低","评价很高","没有反馈","结果不明确"], correct:1},
+    {audio:"A:这个项目的进度怎么样? B:比计划稍微落后了一些,但整体可控。", q:"项目进度如何?", options:["提前完成","稍落后但可控","严重延误","已经停止"], correct:1},
+    {audio:"A:他在公司里人缘怎么样? B:非常好,大家都愿意跟他合作。", q:"他在公司的人缘如何?", options:["很差","非常好","一般","没人了解"], correct:1},
+    {audio:"A:这次危机公司是怎么应对的? B:迅速调整策略,把损失降到了最低。", q:"公司如何应对危机?", options:["坐视不理","迅速调整策略","放弃了","无能为力"], correct:1},
+    {audio:"A:这项新规定对员工有什么影响? B:总体来说提高了大家的福利待遇。", q:"新规定的影响是?", options:["降低了福利","提高了福利","没有影响","增加了负担"], correct:1},
+    {audio:"A:你觉得他适合这个职位吗? B:非常适合,他的经验和能力都很匹配。", q:"他适合这个职位吗?", options:["不适合","非常适合","勉强适合","不确定"], correct:1},
+    {audio:"A:这次会议达成了什么结论? B:大家一致同意加大研发投入。", q:"会议的结论是?", options:["减少投入","加大研发投入","维持现状","取消项目"], correct:1},
+    {audio:"A:你对这次考试的成绩满意吗? B:比预期好,所有的努力都有了回报。", q:"他对成绩的感觉?", options:["不满意","比预期好","一般","很失望"], correct:1},
+    {audio:"A:这个新政策实施后效果如何? B:目前反馈非常积极,效果显著。", q:"新政策的效果?", options:["效果不佳","反馈积极效果显著","没有效果","尚未实施"], correct:1},
+  ], "Parte 3 · Diálogo/passagem mais longa"),
+], reading: [
+  ...tag([
+    {q:"“随着科技的发展,”后面接哪句最合适?", han:"", options:["人们的生活方式发生了很大变化。","古代人不用手机。","天气越来越冷。","他决定退休。"], correct:0},
+    {q:"“虽然他年纪不大,”后面接哪句最合适?", han:"", options:["但经验非常丰富。","所以什么都不懂。","因为很有钱。","于是被辞退了。"], correct:0},
+    {q:"“这项研究历时多年,”后面接哪句最合适?", han:"", options:["终于取得了突破性进展。","很快就放弃了。","毫无意义。","没有人关注。"], correct:0},
+    {q:"“由于交通拥堵,”后面接哪句最合适?", han:"", options:["他不得不提前出门。","他很快就到了。","天气很好。","他很开心。"], correct:0},
+    {q:"“面对激烈的竞争,”后面接哪句最合适?", han:"", options:["企业必须不断创新。","企业可以停止发展。","没有任何压力。","消费者不受影响。"], correct:0},
+    {q:"“经过反复讨论,”后面接哪句最合适?", han:"", options:["双方终于达成了一致。","问题变得更复杂。","会议被取消了。","没有任何进展。"], correct:0},
+    {q:"“这个方案虽然简单,”后面接哪句最合适?", han:"", options:["但效果却很好。","所以没人愿意用。","因为很复杂。","于是被否决了。"], correct:0},
+    {q:"“随着人口老龄化,”后面接哪句最合适?", han:"", options:["养老问题日益受到重视。","年轻人口大量增加。","经济迅速衰退。","出生率大幅上升。"], correct:0},
+    {q:"“他把业余时间都用来学习,”后面接哪句最合适?", han:"", options:["水平提高得很快。","从不学习新东西。","经常浪费时间。","对学习毫无兴趣。"], correct:0},
+    {q:"“这次改革涉及面很广,”后面接哪句最合适?", han:"", options:["推行起来困难重重。","没有任何难度。","已经彻底完成。","无人关心结果。"], correct:0},
+  ], "Parte 1 · Relacione as frases"),
+  ...tag([
+    {q:"这份报告 ___ 明天之前完成,不然会影响后面的工作。", han:"这份报告 ___ 明天之前完成,不然会影响后面的工作。", options:["必须","可能","也许","曾经"], correct:0},
+    {q:"他不但会说英语,___ 会说法语和日语。", han:"他不但会说英语,___ 会说法语和日语。", options:["而且","但是","所以","因为"], correct:0},
+    {q:"这件事 ___ 处理不好,会带来很大的麻烦。", han:"这件事 ___ 处理不好,会带来很大的麻烦。", options:["一旦","一直","一起","一边"], correct:0},
+    {q:"他的成功 ___ 靠运气,而是靠努力。", han:"他的成功 ___ 靠运气,而是靠努力。", options:["不是","不仅","也是","就是"], correct:0},
+    {q:"这个方法虽然简单,___ 效果很好。", han:"这个方法虽然简单,___ 效果很好。", options:["但是","所以","因为","而且"], correct:0},
+    {q:"他对工作 ___ 认真,从不马虎。", han:"他对工作 ___ 认真,从不马虎。", options:["非常","一点也不","几乎不","从来没"], correct:0},
+    {q:"只要坚持下去,___ 会看到成果。", han:"只要坚持下去,___ 会看到成果。", options:["就","才","又","也"], correct:0},
+    {q:"这次会谈 ___ 达成了一致意见。", han:"这次会谈 ___ 达成了一致意见。", options:["最终","曾经","偶尔","从不"], correct:0},
+    {q:"这项研究 ___ 需要更多的时间和资金。", han:"这项研究 ___ 需要更多的时间和资金。", options:["还","才","就","也"], correct:0},
+    {q:"面对挑战,他表现得 ___ 冷静。", han:"面对挑战,他表现得 ___ 冷静。", options:["非常","一点","几乎","从不"], correct:0},
+  ], "Parte 2 · Complete a frase"),
+  ...tag([
+    {q:"", han:"随着科技的发展,越来越多的人选择在网上购物。", passage:true, sub:"这段话主要说的是什么?", options:["网上购物越来越流行","科技没有发展","人们不喜欢购物","网购不安全"], correct:0},
+    {q:"", han:"虽然他年纪不大,但经验非常丰富。", passage:true, sub:"他是一个什么样的人?", options:["年轻但经验丰富","年老经验少","没有经验","年纪很大"], correct:0},
+    {q:"", han:"公司决定把这个项目交给小王负责。", passage:true, sub:"谁负责这个项目?", options:["小王","经理","客户","张总"], correct:0},
+    {q:"", han:"经过多年的努力,这个小镇发生了巨大的变化。", passage:true, sub:"这个小镇怎么样了?", options:["没有变化","发生巨大变化","变得更差","消失了"], correct:1},
+    {q:"", han:"这本书详细介绍了中国的历史文化。", passage:true, sub:"这本书的内容是关于什么?", options:["中国历史文化","自然科学","数学问题","体育运动"], correct:0},
+    {q:"", han:"他每天都会抽出时间阅读,坚持了十几年。", passage:true, sub:"他坚持做什么?", options:["阅读","运动","旅游","工作"], correct:0},
+    {q:"", han:"这家公司在过去五年里迅速发展壮大。", passage:true, sub:"这家公司这五年怎么样?", options:["发展壮大","倒闭了","规模缩小","没有变化"], correct:0},
+    {q:"", han:"由于交通拥堵,他不得不提前一个小时出门。", passage:true, sub:"他为什么提前出门?", options:["交通拥堵","天气不好","迟到习惯","喜欢早起"], correct:0},
+    {q:"", han:"她把业余时间都用来学习一门新语言。", passage:true, sub:"她用业余时间做什么?", options:["学习新语言","看电视","购物","睡觉"], correct:0},
+    {q:"", han:"这项调查显示,大部分受访者对未来持乐观态度。", passage:true, sub:"受访者对未来的态度是?", options:["悲观","乐观","无所谓","不确定"], correct:1},
+    {q:"", han:"这家企业注重环保,在生产过程中尽量减少污染。", passage:true, sub:"这家企业的特点是?", options:["不重视环保","注重环保减少污染","污染严重","即将倒闭"], correct:1},
+    {q:"", han:"许多年轻人选择创业,追求自己的理想,但也面临不小的风险。", passage:true, sub:"年轻人创业面临什么?", options:["毫无风险","面临不小风险","一定会成功","没有理想"], correct:1},
+    {q:"", han:"这座城市正在大力发展公共交通,以缓解交通拥堵问题。", passage:true, sub:"这座城市在做什么?", options:["发展公共交通缓解拥堵","减少公共交通","忽视交通问题","取消公交"], correct:0},
+    {q:"", han:"专家建议,家长应该给孩子适当的自由空间,而不是过度干涉。", passage:true, sub:"专家的建议是什么?", options:["给孩子自由空间","严格控制孩子","完全不管孩子","只关注学习"], correct:0},
+    {q:"", han:"随着人口老龄化加剧,养老问题日益受到重视。", passage:true, sub:"这段话主要关注什么问题?", options:["养老问题","教育问题","就业问题","环境问题"], correct:0},
+    {q:"", han:"这项发明极大地方便了人们的日常生活。", passage:true, sub:"这项发明的作用是?", options:["方便生活","没有作用","增加麻烦","尚未使用"], correct:0},
+    {q:"", han:"这家公司注重员工培训,每年都会安排多次学习机会。", passage:true, sub:"这家公司重视什么?", options:["员工培训","降低成本","裁员","减少福利"], correct:0},
+    {q:"", han:"这项技术仍在不断完善中,尚未大规模应用。", passage:true, sub:"这项技术目前的状态?", options:["已广泛应用","仍在完善尚未推广","已被淘汰","从未开发"], correct:1},
+    {q:"", han:"这次活动吸引了来自不同国家的参与者。", passage:true, sub:"这次活动的参与者有什么特点?", options:["来自不同国家","都是本地人","人数很少","全是学生"], correct:0},
+    {q:"", han:"这家餐厅因为菜品创新,吸引了很多年轻顾客。", passage:true, sub:"这家餐厅为什么吸引年轻顾客?", options:["菜品创新","价格便宜","位置好","服务差"], correct:0},
+  ], "Parte 3 · Compreensão de leitura"),
+], writing: [
+  {type:'order', part:"Parte 1 · Organize a frase", words:["请","一定","把","这件事","告诉","他"], answer:"请一定把这件事告诉他。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["这里的","环境","越来越","好了"], answer:"这里的环境越来越好了。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["他","不但","很","聪明","而且","很","努力"], answer:"他不但很聪明,而且很努力。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["这个","消息","让","大家","都","很","惊讶"], answer:"这个消息让大家都很惊讶。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["由于","天气","原因","航班","取消了"], answer:"由于天气原因,航班取消了。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["他","通过","努力","实现了","自己的","目标"], answer:"他通过努力实现了自己的目标。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["这份","工作","对","他","来说","很","重要"], answer:"这份工作对他来说很重要。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["这项","政策","受到了","广泛的","关注"], answer:"这项政策受到了广泛的关注。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["他的","建议","被","领导","采纳了"], answer:"他的建议被领导采纳了。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["这次","会议","主要","讨论了","预算","问题"], answer:"这次会议主要讨论了预算问题。"},
+  {type:'free', part:"Parte 2 · Escreva com a palavra dada", prompt:"用「尽管」写一句话。", model:"尽管天气不好,他还是坚持出门跑步。"},
+  {type:'free', part:"Parte 2 · Escreva com a palavra dada", prompt:"用「越来越」写一句话。", model:"他的汉语水平越来越好了。"},
+  {type:'free', part:"Parte 2 · Escreva com a palavra dada", prompt:"用「由于」写一句话。", model:"由于工作原因,他不得不搬到另一个城市。"},
+  {type:'free', part:"Parte 2 · Escreva com a palavra dada", prompt:"用「不但…而且…」写一句话。", model:"她不但成绩好,而且很有礼貌。"},
+  {type:'free', part:"Parte 2 · Escreva com a palavra dada", prompt:"用「一旦」写一句话。", model:"这件事一旦处理不好,会带来很大的麻烦。"},
+] };
+
+/* =============== HSK 5 (100 = 45 audição + 45 leitura + 10 escrita) =============== */
+EXAM[5] = { listening: [
+  ...tag([
+    {audio:"近年来,随着环保意识的增强,越来越多的城市开始推广共享单车。", q:"这段话主要讲的是什么现象?", options:["共享单车的推广","环境污染加重","汽车销量下降","城市人口减少"], correct:0},
+    {audio:"他虽然屡次失败,却从未放弃自己的梦想。", q:"他的态度是怎样的?", options:["轻易放弃","从未放弃","无所谓","半途而废"], correct:1},
+    {audio:"A:这次谈判进行得怎么样? B:双方还有分歧,估计还要再谈一轮。", q:"谈判的结果如何?", options:["已经达成协议","还有分歧未解决","彻底失败","取消了"], correct:1},
+    {audio:"这项政策的出台,对中小企业来说无疑是一场及时雨。", q:"这项政策对中小企业意味着什么?", options:["带来了很大帮助","造成了负担","没有影响","增加了竞争"], correct:0},
+    {audio:"他做事一向雷厉风行,从不拖泥带水。", q:"他做事的风格是怎样的?", options:["犹豫不决","雷厉风行","慢条斯理","粗心大意"], correct:1},
+    {audio:"面对质疑,他始终保持沉默,没有做出任何回应。", q:"他是如何应对质疑的?", options:["立刻反驳","公开道歉","保持沉默","寻求帮助"], correct:2},
+    {audio:"这场辩论双方各执己见,谁也说服不了谁。", q:"辩论的结果是?", options:["一方获胜","双方各执己见","达成共识","提前结束"], correct:1},
+    {audio:"他的研究成果得到了国际学术界的高度评价。", q:"他的研究成果怎样?", options:["受到高度评价","无人关注","受到批评","尚未完成"], correct:0},
+    {audio:"这项改革涉及面广,推行起来困难重重。", q:"这项改革的特点是?", options:["简单易行","涉及面广推行困难","已经完成","无人关心"], correct:1},
+    {audio:"他宁可自己吃亏,也不愿意占别人便宜。", q:"他是什么样的人?", options:["爱占便宜","宁可吃亏也不占便宜","自私","斤斤计较"], correct:1},
+    {audio:"这个行业竞争激烈,稍有不慎就会被淘汰。", q:"这个行业的特点是?", options:["竞争激烈","毫无竞争","发展缓慢","已经饱和"], correct:0},
+    {audio:"他对这份工作倾注了大量心血。", q:"他对这份工作的态度是?", options:["敷衍了事","倾注心血","漠不关心","勉强应付"], correct:1},
+    {audio:"这次事故给公司带来了不可估量的损失。", q:"事故带来的影响是?", options:["损失很小","带来巨大损失","没有影响","反而获利"], correct:1},
+    {audio:"他凭借出色的表现赢得了大家的认可。", q:"他为什么获得认可?", options:["运气好","表现出色","关系好","资历老"], correct:1},
+    {audio:"这篇文章逻辑严密,论据充分。", q:"这篇文章的特点是?", options:["逻辑混乱","逻辑严密论据充分","内容空洞","缺乏论据"], correct:1},
+    {audio:"他一贯主张以和平方式解决争端。", q:"他的主张是?", options:["武力解决","和平方式解决","回避问题","拖延时间"], correct:1},
+    {audio:"这项技术目前仍处于试验阶段。", q:"这项技术目前的状态是?", options:["已经成熟","仍在试验阶段","已被淘汰","广泛应用"], correct:1},
+    {audio:"他从不轻易许诺,一旦答应就一定做到。", q:"他的性格特点是?", options:["随便承诺","言而有信","经常食言","犹豫不决"], correct:1},
+    {audio:"这个话题引发了社会各界的广泛讨论。", q:"这个话题的反响是?", options:["无人问津","引发广泛讨论","遭到冷落","已被遗忘"], correct:1},
+    {audio:"他在压力面前始终保持镇定。", q:"他面对压力的表现是?", options:["惊慌失措","始终镇定","逃避退缩","情绪失控"], correct:1},
+  ], "Parte 1 · Frase e pergunta"),
+  ...tag([
+    {audio:"A:这个项目的预算超支了吗? B:超了一些,但还在可控范围内。", q:"项目预算情况如何?", options:["严重超支","超支但可控","完全没超支","预算不足"], correct:1},
+    {audio:"A:你对这次改革怎么看? B:短期会有阵痛,但长远看是必要的。", q:"说话人如何看待改革?", options:["完全反对","短期阵痛长期必要","毫无意义","立刻见效"], correct:1},
+    {audio:"A:公司为什么要裁员? B:主要是为了应对市场的不景气。", q:"裁员的原因是?", options:["公司扩张","应对市场不景气","员工犯错","政策要求"], correct:1},
+    {audio:"A:这个新政策会带来什么影响? B:短期内可能增加成本,但长期有利于环境。", q:"新政策的影响?", options:["短期增本长期利环境","毫无影响","立即降低成本","破坏环境"], correct:0},
+    {audio:"A:这次会议达成共识了吗? B:经过激烈讨论,最终达成了共识。", q:"会议的结果?", options:["没有共识","最终达成共识","不欢而散","无限期推迟"], correct:1},
+    {audio:"A:他为什么突然辞去了高薪的工作? B:据说是想追求自己真正热爱的事业。", q:"他辞职的原因?", options:["被解雇","追求热爱的事业","薪水太低","身体原因"], correct:1},
+    {audio:"A:这项技术的推广遇到了什么困难? B:主要是成本太高,普通用户难以承受。", q:"技术推广的困难是?", options:["成本太高","技术不成熟","没有市场","法律限制"], correct:0},
+    {audio:"A:你觉得这次的市场预测准确吗? B:大体准确,不过有些细节出现了偏差。", q:"市场预测的准确性如何?", options:["完全不准","大体准确有偏差","完全准确","无法判断"], correct:1},
+    {audio:"A:公司如何应对这次的舆论危机? B:第一时间发布声明,并采取了补救措施。", q:"公司如何应对危机?", options:["置之不理","及时声明并补救","否认一切","推卸责任"], correct:1},
+    {audio:"A:这次谈判为什么会破裂? B:双方在核心利益上无法达成一致。", q:"谈判破裂的原因?", options:["沟通不足","核心利益无法一致","时间不够","态度傲慢"], correct:1},
+    {audio:"A:这个行业未来的发展趋势如何? B:专家普遍认为会朝智能化方向发展。", q:"行业未来趋势是?", options:["逐渐衰退","朝智能化发展","停滞不前","无法预测"], correct:1},
+    {audio:"A:这项研究的意义是什么? B:它为解决这一长期难题提供了新思路。", q:"这项研究的意义?", options:["没有意义","提供了新思路","加剧了问题","已被否定"], correct:1},
+    {audio:"A:他在团队中扮演什么角色? B:他是核心决策者,大家都很依赖他的判断。", q:"他在团队中的角色?", options:["普通成员","核心决策者","旁观者","反对者"], correct:1},
+    {audio:"A:这次的营销策略效果如何? B:比预期效果好很多,销量大幅提升。", q:"营销策略的效果?", options:["低于预期","远超预期销量提升","没有效果","反而下降"], correct:1},
+    {audio:"A:这场危机对公司声誉的影响大吗? B:短期内确实受损,但公司迅速采取了补救措施。", q:"公司声誉受到的影响?", options:["毫无影响","短期受损但已补救","彻底毁灭","长期无法恢复"], correct:1},
+    {audio:"A:你如何评价这位新领导的能力? B:他决策果断,而且很善于倾听不同意见。", q:"新领导的特点?", options:["决策犹豫","果断且善于倾听","独断专行","能力平庸"], correct:1},
+    {audio:"A:这次调查的样本量足够大吗? B:样本量很充分,结果具有较高的可信度。", q:"这次调查的可信度如何?", options:["样本太小不可信","样本充分可信度高","无法判断","完全不可靠"], correct:1},
+    {audio:"A:这项发明为什么迟迟没有推广? B:主要受限于生产成本和相关政策。", q:"发明未能推广的原因?", options:["没人感兴趣","成本和政策限制","技术不成熟","市场饱和"], correct:1},
+    {audio:"A:公司这次转型顺利吗? B:过程曲折,但最终找到了适合自己的方向。", q:"公司转型的过程和结果?", options:["一帆风顺","过程曲折但找到方向","彻底失败","仍在迷茫"], correct:1},
+    {audio:"A:你觉得这份报告有说服力吗? B:数据详实,论证也很严密,很有说服力。", q:"这份报告的特点?", options:["缺乏数据","数据详实论证严密","逻辑混乱","毫无说服力"], correct:1},
+    {audio:"A:这次活动的参与度怎么样? B:远远超出组织者的预期。", q:"活动的参与度如何?", options:["低于预期","远超预期","刚好符合预期","无人参与"], correct:1},
+    {audio:"A:他对批评的反应如何? B:他没有反驳,而是虚心接受并加以改正。", q:"他对批评的反应?", options:["强烈反驳","虚心接受并改正","置之不理","情绪失控"], correct:1},
+    {audio:"A:这个方案的可行性如何? B:经过反复论证,可行性很高。", q:"这个方案的可行性?", options:["完全不可行","可行性很高","尚未论证","存在很大风险"], correct:1},
+    {audio:"A:公司未来的战略方向是什么? B:将重点转向可持续发展和技术创新。", q:"公司未来的战略方向?", options:["扩大传统业务","可持续发展和创新","缩减规模","退出市场"], correct:1},
+    {audio:"A:这次事件对行业有什么影响? B:促使整个行业重新审视安全标准。", q:"这次事件的影响?", options:["没有影响","促使重新审视安全标准","加速行业衰退","无人关注"], correct:1},
+  ], "Parte 2 · Diálogo/passagem mais longa"),
+], reading: [
+  ...tag([
+    {q:"这个决定 ___ 关系到公司的未来,大家一定要慎重考虑。", han:"这个决定 ___ 关系到公司的未来,大家一定要慎重考虑。", options:["直接","间接","曾经","偶尔"], correct:0},
+    {q:"他在会上 ___ 了自己的观点,大家都表示赞同。", han:"他在会上 ___ 了自己的观点,大家都表示赞同。", options:["阐述","隐藏","忘记","否认"], correct:0},
+    {q:"尽管困难重重,他 ___ 坚持完成了这个项目。", han:"尽管困难重重,他 ___ 坚持完成了这个项目。", options:["依然","几乎","曾经","顺便"], correct:0},
+    {q:"他的发言 ___ 了听众的强烈反响。", han:"他的发言 ___ 了听众的强烈反响。", options:["引起","忽略","拒绝","阻止"], correct:0},
+    {q:"这次危机 ___ 暴露了公司管理上的问题。", han:"这次危机 ___ 暴露了公司管理上的问题。", options:["充分","几乎不","从不","偶尔"], correct:0},
+    {q:"他的观点 ___ 偏激,但也有一定道理。", han:"他的观点 ___ 偏激,但也有一定道理。", options:["虽然","因为","所以","而且"], correct:0},
+    {q:"面对竞争,企业 ___ 不断创新才能生存。", han:"面对竞争,企业 ___ 不断创新才能生存。", options:["只有","只要不","除非不","一旦不"], correct:0},
+    {q:"这份合同的条款 ___ 清楚,双方都没有异议。", han:"这份合同的条款 ___ 清楚,双方都没有异议。", options:["十分","几乎不","从不","偶尔"], correct:0},
+    {q:"他 ___ 反对这个提议,认为风险太大。", han:"他 ___ 反对这个提议,认为风险太大。", options:["坚决","勉强","偶尔","几乎不"], correct:0},
+    {q:"只有真正了解问题的根源,___ 能找到有效的解决办法。", han:"只有真正了解问题的根源,___ 能找到有效的解决办法。", options:["才","就","也","还"], correct:0},
+    {q:"这项调查的结果 ___ 出乎所有人的意料。", han:"这项调查的结果 ___ 出乎所有人的意料。", options:["完全","几乎不","从不","偶尔"], correct:0},
+    {q:"他的态度 ___ 让所有同事都感到意外。", han:"他的态度 ___ 让所有同事都感到意外。", options:["突然","一直","从不","几乎不"], correct:0},
+    {q:"这次改革的推行 ___ 遇到了不小的阻力。", han:"这次改革的推行 ___ 遇到了不小的阻力。", options:["确实","完全没有","从不","几乎不"], correct:0},
+    {q:"这项技术的应用前景 ___ 广阔。", han:"这项技术的应用前景 ___ 广阔。", options:["十分","几乎不","从不","偶尔"], correct:0},
+    {q:"他对这个结果 ___ 感到满意。", han:"他对这个结果 ___ 感到满意。", options:["非常","一点也不","几乎不","从来不"], correct:0},
+  ], "Parte 1 · Complete a frase"),
+  ...tag([
+    {q:"选出正确的顺序:①这样才能真正理解问题的本质 ②我们不能只看表面现象 ③还要深入分析背后的原因", han:"", options:["②③①","①②③","③①②","②①③"], correct:0},
+    {q:"选出正确的顺序:①于是决定辞职创业 ②他在这家公司工作了十年 ③始终觉得没有实现自己的价值", han:"", options:["②③①","①②③","③②①","②①③"], correct:0},
+    {q:"选出正确的顺序:①这项政策才最终得以实施 ②经过多轮讨论和修改 ③最初的方案存在不少争议", han:"", options:["③②①","①②③","②①③","③①②"], correct:0},
+    {q:"选出正确的顺序:①但坚持练习之后 ②他一开始说得并不流利 ③进步非常明显", han:"", options:["②①③","①②③","③②①","②③①"], correct:0},
+    {q:"选出正确的顺序:①很多人开始重新审视自己的生活方式 ②随着这场疫情的到来 ③变得更加注重健康", han:"", options:["②①③","①②③","③①②","②③①"], correct:0},
+    {q:"选出正确的顺序:①才慢慢意识到沟通的重要性 ②他经历了几次失败的合作 ③开始主动倾听他人的意见", han:"", options:["②①③","①②③","③②①","②③①"], correct:0},
+    {q:"选出正确的顺序:①这个小镇过去十分贫穷 ②如今已经成为热门的旅游目的地 ③但经过多年的发展", han:"", options:["①③②","①②③","③①②","②①③"], correct:0},
+    {q:"选出正确的顺序:①很多企业开始转向线上销售 ②传统零售业受到了很大冲击 ③随着网络购物的普及", han:"", options:["③②①","①②③","②③①","③①②"], correct:0},
+    {q:"选出正确的顺序:①他从小就对科学充满好奇 ②最终成为了一名杰出的科学家 ③经过多年不懈的努力", han:"", options:["①③②","①②③","②①③","③①②"], correct:0},
+    {q:"选出正确的顺序:①这次会议的核心议题 ②与会者展开了热烈的讨论 ③是如何提高企业的创新能力", han:"", options:["①③②","①②③","③①②","②①③"], correct:0},
+  ], "Parte 2 · Ordem das frases"),
+  ...tag([
+    {q:"", han:"近年来,网络购物已经成为许多人日常生活的一部分。它不仅节省了时间,还提供了更多的选择。然而,网购也存在一些问题,比如商品质量难以保证。", passage:true, sub:"根据这段话,网购的缺点是什么?", options:["浪费时间","选择太少","商品质量难保证","价格太贵"], correct:2},
+    {q:"", han:"俗话说'欲速则不达',做事情不能只图快,还要注意质量。", passage:true, sub:"这句话想表达的道理是什么?", options:["越快越好","欲速则不达,要重视质量","慢就是好","速度不重要"], correct:1},
+    {q:"", han:"科学研究表明,充足的睡眠对提高工作效率有着重要作用。", passage:true, sub:"这段话主要说明什么?", options:["睡眠与工作效率的关系","工作时间越长越好","科学研究没有意义","睡眠不重要"], correct:0},
+    {q:"", han:"这项调查显示,大部分受访者对未来持乐观态度。", passage:true, sub:"受访者对未来的态度是?", options:["悲观","乐观","无所谓","不确定"], correct:1},
+    {q:"", han:"这家企业注重环保,在生产过程中尽量减少污染。", passage:true, sub:"这家企业的特点是?", options:["不重视环保","注重环保减少污染","污染严重","即将倒闭"], correct:1},
+    {q:"", han:"许多年轻人选择创业,追求自己的理想,但也面临不小的风险。", passage:true, sub:"年轻人创业面临什么?", options:["毫无风险","面临不小风险","一定会成功","没有理想"], correct:1},
+    {q:"", han:"这座城市正在大力发展公共交通,以缓解交通拥堵问题。", passage:true, sub:"这座城市在做什么?", options:["发展公共交通缓解拥堵","减少公共交通","忽视交通问题","取消公交"], correct:0},
+    {q:"", han:"专家建议,家长应该给孩子适当的自由空间,而不是过度干涉。", passage:true, sub:"专家的建议是什么?", options:["给孩子自由空间","严格控制孩子","完全不管孩子","只关注学习"], correct:0},
+    {q:"", han:"随着人口老龄化加剧,养老问题日益受到重视。", passage:true, sub:"这段话主要关注什么问题?", options:["养老问题","教育问题","就业问题","环境问题"], correct:0},
+    {q:"", han:"这项发明极大地方便了人们的日常生活。", passage:true, sub:"这项发明的作用是?", options:["方便生活","没有作用","增加麻烦","尚未使用"], correct:0},
+    {q:"", han:"这家公司通过持续的技术创新,在竞争激烈的市场中站稳了脚跟。", passage:true, sub:"这家公司如何在市场中立足?", options:["价格战","持续技术创新","广告轰炸","模仿对手"], correct:1},
+    {q:"", han:"这项调查的结果表明,大多数消费者更愿意为环保产品支付更高的价格。", passage:true, sub:"调查结果说明什么?", options:["消费者不关心环保","愿意为环保多付钱","价格是唯一考虑","环保产品没人买"], correct:1},
+    {q:"", han:"这位学者花了二十年时间研究这个课题,终于出版了这部权威著作。", passage:true, sub:"这部著作是如何完成的?", options:["很快就写完了","历经二十年研究","抄袭他人成果","偶然发现的"], correct:1},
+    {q:"", han:"这家医院引进了先进的医疗设备,大大提高了诊断的准确率。", passage:true, sub:"引进设备带来了什么效果?", options:["诊断准确率提高","成本大幅增加","医生减少了","病人变少了"], correct:0},
+    {q:"", han:"这项法律的出台旨在保护消费者的合法权益。", passage:true, sub:"这项法律的目的是?", options:["保护消费者权益","限制企业发展","增加税收","减少就业"], correct:0},
+    {q:"", han:"这次展览汇集了来自世界各地的艺术作品,吸引了大批观众。", passage:true, sub:"这次展览的特点是?", options:["汇集世界各地作品","只展示本地作品","无人参观","规模很小"], correct:0},
+    {q:"", han:"这个团队通过密切合作,成功地在预定时间内完成了任务。", passage:true, sub:"团队是如何完成任务的?", options:["密切合作","单打独斗","放弃了部分工作","延期完成"], correct:0},
+    {q:"", han:"这家企业将部分利润用于公益事业,回馈社会。", passage:true, sub:"这家企业做了什么?", options:["将利润用于公益","隐瞒利润","拒绝纳税","减少投资"], correct:0},
+    {q:"", han:"这项技术的突破,为整个行业带来了新的发展机遇。", passage:true, sub:"这项技术突破带来了什么?", options:["新的发展机遇","行业衰退","更多限制","没有影响"], correct:0},
+    {q:"", han:"这本书用通俗易懂的语言,向读者介绍了复杂的科学原理。", passage:true, sub:"这本书的特点是?", options:["语言通俗易懂","内容晦涩难懂","只适合专家","没有实际内容"], correct:0},
+  ], "Parte 3 · Compreensão de leitura"),
+], writing: [
+  {type:'order', part:"Parte 1 · Organize a frase", words:["这个","决定","直接","关系到","公司的","未来"], answer:"这个决定直接关系到公司的未来。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["他","凭借","出色的","表现","赢得了","认可"], answer:"他凭借出色的表现赢得了认可。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["尽管","困难重重","他","依然","坚持","完成了","项目"], answer:"尽管困难重重,他依然坚持完成了项目。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["这项","政策","对","中小企业","来说","是","及时雨"], answer:"这项政策对中小企业来说是及时雨。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["他的","研究成果","得到了","国际","学术界的","高度评价"], answer:"他的研究成果得到了国际学术界的高度评价。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["这场","辩论","双方","各执己见","谁也","说服不了","谁"], answer:"这场辩论双方各执己见,谁也说服不了谁。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["面对","质疑","他","始终","保持","沉默"], answer:"面对质疑,他始终保持沉默。"},
+  {type:'order', part:"Parte 1 · Organize a frase", words:["这项","技术","目前","仍","处于","试验阶段"], answer:"这项技术目前仍处于试验阶段。"},
+  {type:'free', part:"Parte 2 · Redação", prompt:"用「尽管…但是…」这个句型,写一句话谈谈你学习汉语的经历。", model:"尽管学习汉语很难,但是我一直坚持下来了,因为这是我的梦想。"},
+  {type:'free', part:"Parte 2 · Redação", prompt:"描述你理想中在中国留学的一天,至少写80字。", model:"我理想中在中国留学的一天是这样的:早上上汉语课,中午和同学一起吃午饭,下午去图书馆学习,晚上和朋友聊天,了解更多中国文化。"},
+] };
+
+/* =============== HSK 6 (101 = 50 audição + 50 leitura + 1 escrita) =============== */
+EXAM[6] = { listening: [
+  ...tag([
+    {audio:"根据最新数据显示,今年前往中国留学的外国学生人数较去年增长了百分之十五,其中来自拉丁美洲的学生增幅尤为明显。", q:"这段新闻主要说明了什么?", options:["留学生人数下降","来华留学生增加,拉美增幅明显","中国大学减少招生","拉美学生减少"], correct:1},
+    {audio:"他之所以能取得今天的成就,离不开多年来坚持不懈的努力和身边人的支持。", q:"他成功的原因是什么?", options:["运气好","坚持努力加他人支持","家里有钱","偶然的机会"], correct:1},
+    {audio:"A:这次改革方案争议很大。 B:是啊,支持和反对的声音几乎势均力敌。", q:"关于改革方案,下列哪项正确?", options:["全体一致支持","几乎没有争议","支持反对声音相当","已被否决"], correct:2},
+    {audio:"在全球化的背景下,各国文化交流日益频繁,这既带来了机遇,也带来了挑战。", q:"全球化带来的影响是什么?", options:["只有机遇没有挑战","只有挑战没有机遇","机遇与挑战并存","没有任何影响"], correct:2},
+    {audio:"面对突如其来的变故,她没有惊慌失措,而是冷静地分析局势,迅速做出决定。", q:"她面对变故时的表现是什么?", options:["惊慌失措","冷静应对","逃避问题","求助他人"], correct:1},
+    {audio:"这项发明虽然看似简单,却解决了长期困扰行业的一大难题。", q:"这项发明的意义是什么?", options:["没有实际用途","解决了行业难题","使问题更复杂","无人关注"], correct:1},
+    {audio:"这场辩论的焦点在于如何平衡发展与环保之间的关系。", q:"辩论的焦点是什么?", options:["发展与环保的平衡","人口问题","教育改革","国际关系"], correct:0},
+    {audio:"他始终坚信,只有通过教育才能从根本上改变命运。", q:"他坚信什么?", options:["金钱最重要","教育能改变命运","运气决定一切","努力没用"], correct:1},
+    {audio:"这家企业的转型之路充满艰辛,却最终取得了成功。", q:"企业转型的过程和结果是?", options:["一帆风顺","充满艰辛但成功","彻底失败","尚未开始"], correct:1},
+    {audio:"专家指出,这一现象背后隐藏着深层的社会原因。", q:"专家的看法是?", options:["现象很简单","背后有深层社会原因","与社会无关","无法解释"], correct:1},
+    {audio:"他不顾家人反对,毅然选择了这条艰难的道路。", q:"他的选择是?", options:["听从家人","不顾反对坚持己见","放弃梦想","犹豫不决"], correct:1},
+    {audio:"这项政策的实施效果远远超出了预期。", q:"政策实施效果怎样?", options:["低于预期","超出预期","与预期一致","尚未实施"], correct:1},
+    {audio:"他对待工作一丝不苟,从不敷衍了事。", q:"他的工作态度是?", options:["敷衍了事","一丝不苟","漠不关心","得过且过"], correct:1},
+    {audio:"这场危机暴露出整个行业长期存在的隐患。", q:"这场危机的作用是?", options:["掩盖问题","暴露隐患","解决问题","与行业无关"], correct:1},
+    {audio:"他始终以谦逊的姿态面对自己取得的成就。", q:"他面对成就的态度是?", options:["骄傲自满","谦逊","漠不关心","炫耀"], correct:1},
+  ], "Parte 1 · Frase e pergunta"),
+  ...tag([
+    {audio:"A:您如何看待人工智能对就业市场的冲击? B:我认为它既会取代部分岗位,也会创造新的就业机会,关键在于如何适应变化。", q:"受访者的观点是?", options:["只会带来失业","既取代也创造机会","毫无影响","完全无法预测"], correct:1},
+    {audio:"A:这项政策实施以来,反响如何? B:总体上是积极的,但个别地区反映执行细则还需完善。", q:"政策反响如何?", options:["完全负面","总体积极但细则待完善","毫无反响","彻底失败"], correct:1},
+    {audio:"A:您认为传统文化在现代社会还有价值吗? B:当然,传统文化是民族认同的根基,应当创造性地传承下去。", q:"受访者对传统文化的态度?", options:["认为已经过时","认为应创造性传承","认为毫无价值","认为应完全照搬"], correct:1},
+    {audio:"A:这次科研成果的意义是什么? B:它填补了该领域长期存在的空白,具有重要的理论和实践价值。", q:"科研成果的意义是?", options:["没有意义","填补领域空白","仅有理论价值","仅有实践价值"], correct:1},
+    {audio:"A:您如何评价年轻一代的创业热情? B:总体值得肯定,但也要警惕盲目跟风、缺乏长远规划的问题。", q:"受访者对年轻人创业的评价?", options:["完全否定","值得肯定但需警惕盲目","毫无保留地赞扬","认为不该创业"], correct:1},
+    {audio:"A:这场国际会议达成了哪些共识? B:各方就气候变化的应对措施达成了初步共识。", q:"会议达成了什么共识?", options:["没有共识","气候变化应对措施","经济合作协议","军事合作"], correct:1},
+    {audio:"A:您认为这次危机给企业带来了哪些启示? B:让我们意识到风险管理和多元化经营的重要性。", q:"企业从危机中得到的启示?", options:["无需改变","风险管理和多元化的重要性","应该放弃主业","应减少投资"], correct:1},
+    {audio:"A:这项改革的核心目标是什么? B:核心目标是提高资源配置效率,激发市场活力。", q:"改革的核心目标是?", options:["提高效率激发活力","增加税收","减少市场竞争","维持现状"], correct:0},
+    {audio:"A:您如何看待网络舆论对公共事件的影响? B:它既能推动问题解决,也可能导致信息失真,需要理性看待。", q:"受访者对网络舆论的看法?", options:["完全正面","有利有弊需理性看待","完全负面","毫无影响"], correct:1},
+    {audio:"A:这次谈判的最大障碍是什么? B:双方在关键条款上的立场差异较大,短期内难以弥合。", q:"谈判的最大障碍是?", options:["沟通不畅","关键条款立场差异大","缺乏诚意","时间不够"], correct:1},
+    {audio:"A:您认为这项技术未来会取代人工吗? B:在部分重复性工作上可能会,但创造性工作仍需要人类。", q:"受访者的看法是?", options:["会完全取代人工","部分取代,创造性工作仍需人","完全不会取代","无法判断"], correct:1},
+    {audio:"A:这次调整对整个市场意味着什么? B:意味着行业进入了新一轮的洗牌期。", q:"这次调整对市场的意义?", options:["行业进入洗牌期","市场彻底崩溃","没有变化","行业将消失"], correct:0},
+    {audio:"A:您怎么看待这场争论? B:双方各有道理,关键在于找到一个平衡点。", q:"受访者对争论的看法?", options:["一方完全正确","双方各有道理需平衡","毫无意义","应立即终止"], correct:1},
+    {audio:"A:这次事件给我们带来了哪些教训? B:让我们更加重视制度建设和风险防范。", q:"事件带来的教训是?", options:["无需吸取教训","重视制度建设和风险防范","应该放弃相关业务","责任在于个人"], correct:1},
+    {audio:"A:您认为这项政策的长远影响是什么? B:从长远看,它将促进产业结构的优化升级。", q:"政策的长远影响是?", options:["促进产业升级","阻碍产业发展","没有长远影响","导致产业衰退"], correct:0},
+  ], "Parte 2 · Entrevista/diálogo"),
+  ...tag([
+    {audio:"有一位年轻的画家,起初作品无人问津,他没有气馁,反而更加刻苦钻研技艺,几年后终于举办了自己的个人画展,获得了广泛好评。", q:"这位画家最终的结果是?", options:["放弃了绘画","举办画展获得好评","作品一直无人问津","转行做了别的工作"], correct:1},
+    {audio:"在一次登山活动中,队伍遭遇了突如其来的暴风雪,队长临危不乱,迅速调整路线,最终带领大家安全下山。", q:"队长在危机中的表现是?", options:["惊慌失措","临危不乱妥善应对","放弃了队员","迷失了方向"], correct:1},
+    {audio:"这家小企业最初只有三个人,凭借对产品质量的执着追求,如今已发展成为业内知名品牌。", q:"这家企业发展的关键是?", options:["对质量的执着追求","靠广告营销","靠低价竞争","靠政府扶持"], correct:0},
+    {audio:"他年轻时曾是一名普通工人,业余时间坚持自学,最终考上了大学,改变了自己的命运。", q:"他是如何改变命运的?", options:["靠家庭背景","业余自学考上大学","靠运气","靠他人帮助"], correct:1},
+    {audio:"这座古老的桥梁历经数百年风雨,依然屹立不倒,成为这座城市的标志性建筑。", q:"这座桥梁的特点是?", options:["历史悠久依然屹立","已经倒塌","刚刚建成","即将拆除"], correct:0},
+    {audio:"这位科学家在实验中屡次失败,但他坚信自己的理论方向是正确的,最终的成功证明了他的坚持是值得的。", q:"这段话想说明什么?", options:["失败就应该放弃","坚持正确的方向终会成功","运气决定一切","理论不重要"], correct:1},
+    {audio:"这个村庄曾经因交通闭塞而贫困落后,如今随着公路的修建,逐渐走上了脱贫致富的道路。", q:"这个村庄发生了什么变化?", options:["依然贫困落后","因公路修建逐渐脱贫","变得更加闭塞","人口大量减少"], correct:1},
+    {audio:"他在事业最辉煌的时候选择急流勇退,把更多时间留给家人和自己真正热爱的事情。", q:"他做出了什么选择?", options:["继续追逐名利","急流勇退陪伴家人","被迫退休","一直很痛苦"], correct:1},
+    {audio:"这位老师几十年如一日,坚守在偏远山区的讲台上,培养了一批又一批学生。", q:"这位老师的坚持体现在哪里?", options:["几十年坚守山区讲台","很快就调走了","只教了一年","放弃了教学"], correct:0},
+    {audio:"这项工程历经十年建设,克服了无数技术难题,最终提前竣工。", q:"这项工程最终的结果是?", options:["延期完工","提前竣工","彻底失败","中途停工"], correct:1},
+    {audio:"面对突如其来的批评,他没有为自己辩解,而是虚心听取意见,并在随后的工作中做出了改进。", q:"他是如何应对批评的?", options:["极力辩解","虚心听取并改进","置之不理","公开反驳"], correct:1},
+    {audio:"这位企业家将大部分财富捐赠给了教育事业,认为知识才是改变社会最根本的力量。", q:"这位企业家的理念是?", options:["财富最重要","知识是改变社会的根本力量","应该保留全部财富","教育不重要"], correct:1},
+    {audio:"这支球队在决赛中一度落后,但队员们没有放弃,最终在最后时刻实现了逆转。", q:"这支球队最终的结果是?", options:["最终落败","实现了逆转","中途弃赛","平局收场"], correct:1},
+    {audio:"这位作家的作品起初屡遭退稿,但他坚持不懈地修改打磨,最终这部作品成为了畅销书。", q:"这部作品最终的命运是?", options:["一直无法出版","成为了畅销书","被彻底遗忘","作者放弃了写作"], correct:1},
+    {audio:"这家医院的医生们放弃休假,连续奋战在抗疫一线,展现了崇高的职业精神。", q:"医生们展现了什么精神?", options:["逃避责任","崇高的职业精神","消极怠工","漠不关心"], correct:1},
+    {audio:"这个团队在项目初期屡屡碰壁,但通过不断复盘和调整策略,最终扭转了局面。", q:"团队是如何扭转局面的?", options:["放弃了项目","不断复盘调整策略","靠运气","更换了全部成员"], correct:1},
+    {audio:"他小时候家境贫寒,靠着奖学金完成了学业,如今成为了资助贫困学生的慈善家。", q:"他现在做什么?", options:["资助贫困学生的慈善家","仍然很贫穷","放弃了帮助他人","从未上过学"], correct:0},
+    {audio:"这项非物质文化遗产曾一度濒临失传,经过多方努力,如今重新焕发了生机。", q:"这项文化遗产现在的状态是?", options:["已经失传","重新焕发生机","无人问津","从未受到关注"], correct:1},
+    {audio:"这位运动员在职业生涯末期依然刻苦训练,用实际行动诠释了什么是真正的体育精神。", q:"这位运动员体现了什么?", options:["懈怠退役","真正的体育精神","放弃比赛","消极应付"], correct:1},
+    {audio:"这座城市在遭受严重自然灾害后,居民们团结互助,很快就恢复了正常的生活秩序。", q:"这座城市灾后的情况是?", options:["长期无法恢复","居民团结互助迅速恢复","陷入混乱","人口大量迁出"], correct:1},
+  ], "Parte 3 · Narrativa"),
+], reading: [
+  ...tag([
+    {q:"下列哪句话有语病?", han:"", options:["他的成功离不开努力。","这本书的内容非常丰富多彩极了。","大家一致同意了这个方案。","这项政策效果显著。"], correct:1},
+    {q:"下列哪句话有语病?", han:"", options:["这次会议非常成功。","他把作业完成得很认真。","这个问题的关键在于是缺乏沟通造成的。","她的观点得到了大家的认可。"], correct:2},
+    {q:"下列哪句话有语病?", han:"", options:["这项技术已经相当成熟了。","他大约看了三十分钟左右的书。","这次演讲很精彩。","公司决定加大投资力度。"], correct:1},
+    {q:"下列哪句话有语病?", han:"", options:["他的解释使得大家都明白了。","这个计划的目的是为了提高效率。","这本书值得一读。","他终于完成了这项任务。"], correct:1},
+    {q:"下列哪句话有语病?", han:"", options:["这场比赛的结果令人意外。","经过讨论,大家达成了共识。","这次活动受到了大家的一致的好评。","他的建议很有价值。"], correct:2},
+    {q:"下列哪句话有语病?", han:"", options:["这个方案存在一些问题。","他不仅会说英语,还会说法语。","这本小说的情节曲折离奇,让人爱不释手极了。","公司业绩稳步增长。"], correct:2},
+    {q:"下列哪句话有语病?", han:"", options:["这项政策的目的是提高民生水平。","他对这份工作非常满意。","这次旅行让他大开眼界,增长了不少见识。","这个问题大概可能是由于沟通不足造成的。"], correct:3},
+    {q:"下列哪句话有语病?", han:"", options:["这本书的销量超过了预期。","他的观点逐渐被更多人接受。","这个消息使我们感到非常的意外和惊讶极了。","这项研究具有重要意义。"], correct:2},
+    {q:"下列哪句话有语病?", han:"", options:["这次改革涉及多个部门。","他把所有的精力都投入到了工作当中。","这场演出获得了观众们的热烈的欢迎和掌声。","这项计划已获批准。"], correct:2},
+    {q:"下列哪句话有语病?", han:"", options:["他的态度让人印象深刻。","这个项目预计明年完工。","这本书大约有可能是三百页左右。","这次谈判取得了积极的进展。"], correct:2},
+  ], "Parte 1 · Encontre o erro"),
+  ...tag([
+    {q:"他的发言 ___ 了在场所有人的注意,大家都认真聆听。", han:"他的发言 ___ 了在场所有人的注意,大家都认真聆听。", options:["吸引","忽视","放弃","拒绝"], correct:0},
+    {q:"这次谈判能否成功,___ 取决于双方的诚意。", han:"这次谈判能否成功,___ 取决于双方的诚意。", options:["很大程度上","完全没有","偶尔","绝对不"], correct:0},
+    {q:"面对批评,他不仅没有生气,___ 虚心接受并加以改进。", han:"面对批评,他不仅没有生气,___ 虚心接受并加以改进。", options:["反而","仍然","几乎","偶尔"], correct:0},
+    {q:"他的言论 ___ 引发了轩然大波。", han:"他的言论 ___ 引发了轩然大波。", options:["一石激起千层浪般","毫无反应地","悄无声息地","不出所料地"], correct:0},
+    {q:"他的态度 ___ 发生了一百八十度的转变。", han:"他的态度 ___ 发生了一百八十度的转变。", options:["突然","一直","从不","几乎不"], correct:0},
+    {q:"这起事件 ___ 成为舆论关注的焦点。", han:"这起事件 ___ 成为舆论关注的焦点。", options:["迅速","缓慢","从未","几乎不"], correct:0},
+    {q:"这份报告的数据 ___ 真实可靠。", han:"这份报告的数据 ___ 真实可靠。", options:["十分","几乎不","从不","偶尔"], correct:0},
+    {q:"这项政策的出台,___ 着改革进入了一个新阶段。", han:"这项政策的出台,___ 着改革进入了一个新阶段。", options:["标志","阻止","取消","忽视"], correct:0},
+    {q:"他对这个项目 ___ 倾注了大量心血。", han:"他对这个项目 ___ 倾注了大量心血。", options:["始终","从未","几乎不","偶尔"], correct:0},
+    {q:"这项研究成果 ___ 填补了该领域的空白。", han:"这项研究成果 ___ 填补了该领域的空白。", options:["有效地","毫无意义地","勉强地","拒绝地"], correct:0},
+  ], "Parte 2 · Complete a frase"),
+  ...tag([
+    {q:"选出正确的顺序:①这项政策才逐步得到完善 ②起初实施时遇到了不少阻力 ③经过多方协调和反复调整", han:"", options:["②③①","①②③","③②①","②①③"], correct:0},
+    {q:"选出正确的顺序:①这座城市的面貌焕然一新 ②随着一系列改造工程的完成 ③曾经破旧的街区不复存在", han:"", options:["②③①","①②③","③①②","②①③"], correct:0},
+    {q:"选出正确的顺序:①最终却意外地取得了成功 ②这个项目起初并不被看好 ③团队成员始终坚持不懈", han:"", options:["②③①","①②③","③②①","②①③"], correct:0},
+    {q:"选出正确的顺序:①很多传统行业面临转型的压力 ②随着数字化浪潮的推进 ③但也蕴藏着新的机遇", han:"", options:["②①③","①②③","③①②","②③①"], correct:0},
+    {q:"选出正确的顺序:①这门学科逐渐发展成为一门独立的学科 ②经过几代学者的不懈努力 ③最初只是其他学科的一个分支", han:"", options:["③②①","①②③","②③①","③①②"], correct:0},
+    {q:"选出正确的顺序:①他才真正体会到坚持的意义 ②只有经历过无数次失败之后 ③年轻时他并不理解这句话", han:"", options:["③②①","①②③","②①③","③①②"], correct:0},
+    {q:"选出正确的顺序:①这场辩论持续了整整三个小时 ②双方始终未能说服对方 ③尽管观点针锋相对", han:"", options:["③①②","①②③","②③①","①③②"], correct:0},
+    {q:"选出正确的顺序:①才使得这项技术得以真正落地 ②研发团队经历了无数次试验 ③在克服重重困难之后", han:"", options:["②③①","①②③","③②①","②①③"], correct:0},
+    {q:"选出正确的顺序:①这个观点逐渐被学术界所接受 ②起初曾遭到不少专家的质疑 ③随着越来越多证据的出现", han:"", options:["②③①","①②③","③②①","②①③"], correct:0},
+    {q:"选出正确的顺序:①这家公司才走出了困境 ②在经历了长达三年的低迷期后 ③凭借一次成功的战略转型", han:"", options:["②③①","①②③","③①②","②①③"], correct:0},
+  ], "Parte 3 · Ordem do parágrafo"),
+  ...tag([
+    {q:"", han:"'塞翁失马,焉知非福'这句古话告诉我们,一时的得失并不能决定最终的结果,坏事有时也可能转化为好事。", passage:true, sub:"这句话主要想表达的意思是什么?", options:["坏事一定是坏事","得失难以预料,好坏可以转化","运气决定一切","古话没有道理"], correct:1},
+    {q:"", han:"改革开放以来,中国经济取得了举世瞩目的成就,但同时也面临着资源与环境的双重压力。", passage:true, sub:"这段话提到中国经济发展面临的问题是什么?", options:["没有任何问题","资源与环境的压力","经济停滞不前","人口过少"], correct:1},
+    {q:"", han:"'不入虎穴,焉得虎子'意味着不冒风险,就难以获得真正的成功。", passage:true, sub:"这句话强调的是什么?", options:["要冒险才能成功","永远不要冒险","成功靠运气","风险毫无意义"], correct:0},
+    {q:"", han:"这项研究历时十年,耗费了大量的人力物力,终于取得了突破性进展。", passage:true, sub:"这项研究的过程是怎样的?", options:["轻松顺利","历时长耗费大终获突破","半途而废","尚未开始"], correct:1},
+    {q:"", han:"这部作品以细腻的笔触描绘了普通人的生活百态。", passage:true, sub:"这部作品的特点是什么?", options:["笔触粗糙","细腻描绘生活百态","内容空洞","只写名人"], correct:1},
+    {q:"", han:"这项政策的出台,标志着改革进入了一个新阶段。", passage:true, sub:"这项政策意味着什么?", options:["改革结束","改革进入新阶段","改革失败","与改革无关"], correct:1},
+    {q:"", han:"他的一生都在为理想不懈奋斗,从未有过丝毫懈怠。", passage:true, sub:"他的人生态度是?", options:["得过且过","不懈奋斗","半途而废","随波逐流"], correct:1},
+    {q:"", han:"这家企业凭借敏锐的市场洞察力,总能在竞争中抢占先机。", passage:true, sub:"这家企业成功的原因是?", options:["敏锐的市场洞察力","雄厚的资金","政府的扶持","运气好"], correct:0},
+    {q:"", han:"这项发现颠覆了学术界长期以来的固有认知。", passage:true, sub:"这项发现的作用是?", options:["颠覆固有认知","印证了旧理论","毫无价值","被学术界否定"], correct:0},
+    {q:"", han:"这位领导者以身作则,赢得了团队成员的一致尊敬。", passage:true, sub:"这位领导者是如何赢得尊敬的?", options:["以身作则","严厉惩罚下属","靠职位权威","从不与人交流"], correct:0},
+    {q:"", han:"这项改革触及了多方利益,推行过程中阻力重重。", passage:true, sub:"这项改革推行的情况是?", options:["一帆风顺","触及利益阻力重重","无人反对","已经放弃"], correct:1},
+    {q:"", han:"这本著作以严谨的考证和翔实的史料,还原了那段被遗忘的历史。", passage:true, sub:"这本著作的特点是?", options:["缺乏史料依据","严谨考证还原历史","内容虚构","观点片面"], correct:1},
+    {q:"", han:"这座博物馆通过现代化的展示手段,让古老的文物焕发出新的生命力。", passage:true, sub:"这座博物馆做了什么?", options:["让文物焕发新生命力","关闭了展览","减少了文物","忽视了历史"], correct:0},
+    {q:"", han:"这家公司在环保方面投入巨大,力求实现可持续发展。", passage:true, sub:"这家公司致力于什么?", options:["可持续发展","短期利润最大化","忽视环境保护","减少环保投入"], correct:0},
+    {q:"", han:"这位翻译家倾注毕生心血,将大量外国经典文学作品介绍给了国内读者。", passage:true, sub:"这位翻译家做出了什么贡献?", options:["介绍外国经典文学作品","创作了新的文学作品","翻译了科技文献","放弃了翻译工作"], correct:0},
+    {q:"", han:"这项政策实施后,城乡收入差距明显缩小。", passage:true, sub:"这项政策的效果是?", options:["缩小了城乡收入差距","扩大了收入差距","没有任何效果","仅影响城市"], correct:0},
+    {q:"", han:"这家企业始终坚持诚信经营,赢得了消费者的长期信赖。", passage:true, sub:"这家企业成功的关键是?", options:["诚信经营","价格低廉","广告轰炸","垄断市场"], correct:0},
+    {q:"", han:"这项工艺凝聚了几代匠人的智慧,如今被列为非物质文化遗产。", passage:true, sub:"这项工艺现在的地位是?", options:["已被列为非物质文化遗产","已经失传","无人在意","被禁止传承"], correct:0},
+    {q:"", han:"这场演讲以生动的案例和深刻的见解,深深打动了在场的每一位听众。", passage:true, sub:"这场演讲的效果是?", options:["深深打动了听众","反响平平","令人昏昏欲睡","无人理解"], correct:0},
+    {q:"", han:"这个团队秉持精益求精的态度,不断打磨产品的每一个细节。", passage:true, sub:"这个团队的工作态度是?", options:["精益求精","得过且过","敷衍了事","急于求成"], correct:0},
+  ], "Parte 4 · Compreensão de leitura"),
+], writing: [
+  {type:'free', part:"Tarefa única · Leia e resuma", prompt:"读下面的短文,尝试凭记忆在150字以内进行缩写:\n\n“一个年轻人在创业路上屡遭失败,身边的人都劝他放弃。但他始终相信自己的想法是对的,一次又一次地调整方案,虚心听取意见。经过五年的坚持,他的公司终于获得了成功,也证明了坚持的价值。”", model:"一个年轻人创业屡次失败,但他坚持不放弃,不断调整、虚心学习,五年后终于取得成功,证明了坚持的价值。"},
+] };
+
+/* ================= STATE ================= */
+let current = null;
+let timerHandle = null, elapsed = 0;
+const PKEY = 'hsk-sim-progress-v1';
+let progress = {};
+try { progress = JSON.parse(localStorage.getItem(PKEY) || '{}'); } catch(e){ progress = {}; }
+function saveProgress(){ try{ localStorage.setItem(PKEY, JSON.stringify(progress)); }catch(e){} }
+
+/* ================= TTS ================= */
+let zhVoice = null;
+function pickVoice(){
+  if (!('speechSynthesis' in window)) return;
+  const voices = speechSynthesis.getVoices();
+  zhVoice = voices.find(v => /zh-CN|zh_CN|cmn-Hans-CN/i.test(v.lang)) || voices.find(v => /^zh/i.test(v.lang));
+}
+if ('speechSynthesis' in window){
+  pickVoice();
+  speechSynthesis.onvoiceschanged = pickVoice;
+}
+function speak(text){
+  if (!('speechSynthesis' in window)) { alert('Seu navegador não suporta voz sintetizada.'); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'zh-CN';
+  if (zhVoice) u.voice = zhVoice;
+  u.rate = 0.92;
+  speechSynthesis.speak(u);
+}
+
+/* ================= RENDER: HOME ================= */
+const levelGrid = document.getElementById('levelGrid');
+function renderHome(){
+  levelGrid.innerHTML = '';
+  LEVELS.forEach(lv => {
+    const data = EXAM[lv.id];
+    const total = data.listening.length + data.reading.length + data.writing.length;
+    const p = progress[lv.id];
+    const card = document.createElement('div');
+    card.className = 'lvl-card';
+    card.innerHTML = `
+      <div class="lvl-top">
+        <span class="lvl-badge" style="background:var(--l${lv.id}-soft); color:var(--l${lv.id});">HSK ${lv.id}</span>
+        <span class="lvl-words">${lv.words}+ palavras</span>
+      </div>
+      <div class="lvl-name">Nível ${lv.id}</div>
+      <div class="lvl-blurb">${lv.blurb}</div>
+      <div class="lvl-parts">
+        <span>🎧 ${data.listening.length} audição</span>
+        <span>📖 ${data.reading.length} leitura</span>
+        ${data.writing.length ? `<span>✍️ ${data.writing.length} escrita</span>` : ''}
+      </div>
+      <div class="lvl-count">Total aqui: <b>${total}</b> · prova oficial: <b>${REAL_TOTALS[lv.id]}</b></div>
+      <div class="lvl-progress">${p ? `Última pontuação: <b>${p.score}/${p.max}</b>` : 'Ainda não feito'}</div>
+      <button class="lvl-go" data-lv="${lv.id}">${p ? 'Refazer simulado' : 'Iniciar simulado'}</button>
+    `;
+    card.querySelector('.lvl-go').addEventListener('click', () => startExam(lv.id));
+    levelGrid.appendChild(card);
+  });
+}
+
+/* ================= EXAM FLOW ================= */
+const examView = document.getElementById('examView');
+const resultsView = document.getElementById('resultsView');
+const homeHead = document.getElementById('homeHead');
+
+function sectionKeysFor(lv){
+  const d = EXAM[lv];
+  const keys = ['listening','reading'];
+  if (d.writing.length) keys.push('writing');
+  return keys;
+}
+
+function startExam(lv){
+  current = { level: lv, keys: sectionKeysFor(lv), secIdx: 0, qIdx: {listening:0, reading:0}, answers: {listening:[], reading:[]} };
+  homeHead.hidden = true; levelGrid.hidden = true;
+  resultsView.hidden = true; examView.hidden = false;
+  document.getElementById('examTitle').textContent = 'HSK ' + lv;
+  elapsed = 0; clearInterval(timerHandle);
+  timerHandle = setInterval(() => {
+    elapsed++;
+    const m = String(Math.floor(elapsed/60)).padStart(2,'0');
+    const s = String(elapsed%60).padStart(2,'0');
+    document.getElementById('stopwatch').textContent = m+':'+s;
+  }, 1000);
+  renderSection();
+}
+
+document.getElementById('btnHome').addEventListener('click', () => {
+  clearInterval(timerHandle);
+  if ('speechSynthesis' in window) speechSynthesis.cancel();
+  examView.hidden = true; resultsView.hidden = true;
+  homeHead.hidden = false; levelGrid.hidden = false;
+  renderHome();
+});
+
+function renderTabs(){
+  const tabs = document.getElementById('sectionTabs');
+  const labelMap = {listening:'🎧 Audição', reading:'📖 Leitura', writing:'✍️ Escrita'};
+  tabs.innerHTML = '';
+  current.keys.forEach((k,i) => {
+    const b = document.createElement('button');
+    b.className = 'stab' + (i===current.secIdx ? ' active':'');
+    b.textContent = labelMap[k];
+    b.addEventListener('click', () => { current.secIdx = i; renderSection(); });
+    tabs.appendChild(b);
+  });
+}
+
+function renderSection(){
+  renderTabs();
+  const key = current.keys[current.secIdx];
+  document.getElementById('examSub').textContent = {listening:'Audição', reading:'Leitura', writing:'Escrita'}[key];
+  if (key === 'writing') renderWriting();
+  else renderQuestion(key);
+}
+
+function renderQuestion(key){
+  const list = EXAM[current.level][key];
+  const idx = current.qIdx[key];
+  const q = list[idx];
+  const answers = current.answers[key];
+  const answered = answers[idx] !== undefined;
+  const area = document.getElementById('qArea');
+
+  let mediaHtml = '';
+  if (key === 'listening'){
+    mediaHtml = `<div class="audio-row">
+        <button class="playbtn" id="playBtn">🔊 Ouvir</button>
+        <span class="replaycount">pode ouvir quantas vezes quiser</span>
+      </div>`;
+  } else if (q.passage){
+    mediaHtml = `<div class="passage">${q.han}</div>`;
+  }
+
+  let questionLabel;
+  if (key === 'reading' && !q.passage && q.han){
+    const hint = (q.q && q.q !== q.han) ? `<div class="exam-sub" style="margin-top:4px;">${q.q}</div>` : '';
+    questionLabel = `<div class="qtext"><span class="han">${q.han}</span></div>${hint}`;
+  } else {
+    questionLabel = `<div class="qtext">${q.sub || q.q}</div>`;
+  }
+
+  area.innerHTML = `
+    <div class="qwrap">
+      <div class="qmeta">
+        <span class="part">${q.part || ''}</span>
+        <span class="prog mono">${idx+1}/${list.length}</span>
+      </div>
+      <div class="bar"><i style="width:${((idx)/list.length)*100}%"></i></div>
+      ${mediaHtml}
+      ${questionLabel}
+      <div class="opts" id="optsWrap"></div>
+      <div class="navrow">
+        <button class="btn" id="prevBtn" ${idx===0 ? 'disabled':''}>← Anterior</button>
+        <button class="btn primary" id="nextBtn" ${answered ? '' : 'disabled'}>${idx===list.length-1 ? 'Ver resultado' : 'Próxima →'}</button>
+      </div>
+    </div>
+  `;
+
+  const letters = ['A','B','C','D'];
+  const optsWrap = document.getElementById('optsWrap');
+  q.options.forEach((opt, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt}</span>`;
+    if (answered){
+      b.disabled = true;
+      if (i === q.correct) b.classList.add('correct');
+      else if (i === answers[idx]) b.classList.add('wrong');
+    }
+    b.addEventListener('click', () => {
+      if (current.answers[key][idx] !== undefined) return;
+      current.answers[key][idx] = i;
+      renderQuestion(key);
+    });
+    optsWrap.appendChild(b);
+  });
+
+  if (key === 'listening'){
+    document.getElementById('playBtn').addEventListener('click', () => speak(q.audio));
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', () => { current.qIdx[key]--; renderQuestion(key); });
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if (idx === list.length - 1){
+      if (current.secIdx < current.keys.length - 1){ current.secIdx++; renderSection(); }
+      else showResults();
+    } else {
+      current.qIdx[key]++; renderQuestion(key);
+    }
+  });
+}
+
+function renderWriting(){
+  const tasks = EXAM[current.level].writing;
+  const area = document.getElementById('qArea');
+  area.innerHTML = `<div id="wList"></div>
+    <div class="navrow" style="padding:16px 20px;">
+      <span></span>
+      <button class="btn primary" id="finishBtn">Ver resultado</button>
+    </div>`;
+  const wList = document.getElementById('wList');
+  tasks.forEach((t, i) => {
+    const box = document.createElement('div');
+    box.className = 'wtask';
+    const partLabel = t.part ? `<div class="exam-sub" style="margin-bottom:4px;">${t.part}</div>` : '';
+    if (t.type === 'order'){
+      box.innerHTML = `
+        ${partLabel}
+        <h3>Tarefa ${i+1} — organize a frase</h3>
+        <div class="prompt">Use estas palavras, na ordem certa, pra formar uma frase correta.</div>
+        <div class="chips">${t.words.map(w => `<span class="chip">${w}</span>`).join('')}</div>
+        <input class="ans" type="text" placeholder="Digite a frase em chinês aqui" id="w${i}">
+        <button class="btn revealbtn" data-i="${i}">Ver resposta sugerida</button>
+        <div class="reveal" id="reveal${i}" hidden></div>
+      `;
+    } else if (t.type === 'char'){
+      box.innerHTML = `
+        ${partLabel}
+        <h3>Tarefa ${i+1} — complete com o caractere certo</h3>
+        <div class="prompt">Troque o pinyin entre parênteses pelo caractere chinês correto.</div>
+        <div class="qtext" style="margin-bottom:10px;">${t.sentence}</div>
+        <input class="ans" type="text" placeholder="Digite o caractere aqui" id="w${i}">
+        <button class="btn revealbtn" data-i="${i}">Ver resposta</button>
+        <div class="reveal" id="reveal${i}" hidden></div>
+      `;
+    } else {
+      box.innerHTML = `
+        ${partLabel}
+        <h3>Tarefa ${i+1} — redação</h3>
+        <div class="prompt">${t.prompt.replace(/\n/g,'<br>')}</div>
+        <textarea rows="4" placeholder="Escreva sua resposta em chinês aqui" id="w${i}"></textarea>
+        <button class="btn revealbtn" data-i="${i}">Ver resposta-modelo</button>
+        <div class="reveal" id="reveal${i}" hidden></div>
+      `;
+    }
+    wList.appendChild(box);
+  });
+  wList.querySelectorAll('.revealbtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = btn.dataset.i;
+      const t = tasks[i];
+      const rv = document.getElementById('reveal'+i);
+      rv.hidden = false;
+      const labelMap = {order:'Sugestão: ', char:'Resposta: ', free:'Resposta-modelo: '};
+      rv.textContent = labelMap[t.type] + (t.answer || t.model);
+    });
+  });
+  document.getElementById('finishBtn').addEventListener('click', showResults);
+}
+
+function showResults(){
+  clearInterval(timerHandle);
+  const lv = current.level;
+  const data = EXAM[lv];
+  let score = 0, max = 0;
+  const reviewHtml = [];
+  ['listening','reading'].forEach(key => {
+    data[key].forEach((q, i) => {
+      max++;
+      const given = current.answers[key][i];
+      const ok = given === q.correct;
+      if (ok) score++;
+      const letters = ['A','B','C','D'];
+      reviewHtml.push(`<div class="review-item">
+        <div class="ri-mark ${ok ? 'ok':'no'}">${ok ? '✓':'✕'}</div>
+        <div class="ri-body">
+          <div class="ri-q">${key==='listening' ? '🎧 ' + q.q : (q.passage ? q.sub : (q.han || q.q))}</div>
+          <div class="ri-a">Sua resposta: ${given===undefined ? '—' : letters[given]+') '+q.options[given]} ${ok ? '' : ' · Correta: '+letters[q.correct]+') '+q.options[q.correct]}</div>
+        </div>
+      </div>`);
+    });
+  });
+
+  progress[lv] = {score, max, date: new Date().toISOString()};
+  saveProgress();
+
+  examView.hidden = true; resultsView.hidden = false;
+  document.getElementById('resultsBody').innerHTML = `
+    <div class="score-hero">
+      <div class="score-num mono">${score}/${max}</div>
+      <div>
+        <div style="font-weight:600;">HSK ${lv} — resultado</div>
+        <div class="score-sub">Audição + leitura · tempo: ${String(Math.floor(elapsed/60)).padStart(2,'0')}:${String(elapsed%60).padStart(2,'0')}${data.writing.length ? ' · escrita revisada por autoavaliação' : ''}</div>
+      </div>
+    </div>
+    <div>${reviewHtml.join('')}</div>
+    <div class="navrow">
+      <button class="btn" id="backHomeBtn">← Ver todos os níveis</button>
+      <button class="btn primary" id="redoBtn">Refazer este nível</button>
+    </div>
+  `;
+  document.getElementById('backHomeBtn').addEventListener('click', () => {
+    examView.hidden = true; resultsView.hidden = true;
+    homeHead.hidden = false; levelGrid.hidden = false;
+    renderHome();
+  });
+  document.getElementById('redoBtn').addEventListener('click', () => startExam(lv));
+}
+
+renderHome();
+</script>
+</body>
+</html>

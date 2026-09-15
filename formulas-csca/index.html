@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fórmulas do CSCA · CSC China Toolkit</title>
+<meta name="description" content="Revisão de matemática e física organizada pelos tópicos oficiais do exame CSCA, com as fórmulas essenciais.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+  :root{
+    --paper:#f4f3ef;
+    --grid:#ddd8cd;
+    --surface:#ffffff;
+    --ink:#1d201d;
+    --ink-soft:#5c625b;
+    --line:#ddd8cd;
+
+    --math:#1c7a6e;
+    --math-soft:#e4f2ef;
+    --phys:#4a3f8f;
+    --phys-soft:#eae7f7;
+
+    --focus:#1c7a6e;
+    --font-display:"Fraunces", Georgia, serif;
+    --font-body:"Source Sans 3", -apple-system, sans-serif;
+    --font-math:"Source Sans 3", -apple-system, sans-serif;
+    --font-zh:"Noto Sans SC", sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#17171a;
+      --grid:#2e2e31;
+      --surface:#1f1f22;
+      --ink:#e8e7e2;
+      --ink-soft:#9d9c96;
+      --line:#2e2e31;
+
+      --math:#59c9ba;
+      --math-soft:#1b2e2a;
+      --phys:#a79bf0;
+      --phys-soft:#282246;
+
+      --focus:#59c9ba;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#17171a;
+    --grid:#2e2e31;
+    --surface:#1f1f22;
+    --ink:#e8e7e2;
+    --ink-soft:#9d9c96;
+    --line:#2e2e31;
+
+    --math:#59c9ba;
+    --math-soft:#1b2e2a;
+    --phys:#a79bf0;
+    --phys-soft:#282246;
+
+    --focus:#59c9ba;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  .toolkit-nav{background:var(--surface); border-bottom:1px solid var(--line);}
+  .toolkit-nav-inner{max-width:820px; margin:0 auto; padding:13px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .toolkit-brand{font-size:.78rem; font-weight:700; letter-spacing:.03em; color:var(--ink-soft); text-decoration:none;}
+  .toolkit-brand:hover{color:var(--ink);}
+  .toolkit-current{font-family:var(--font-body); font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-soft);}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  :focus-visible{outline:2px solid var(--focus); outline-offset:2px;}
+  h1,h2,h3{font-family:var(--font-display); text-wrap:balance; margin:0;}
+  .wrap{max-width:760px; margin:0 auto; padding-inline:20px;}
+
+  /* MASTHEAD with subtle grid-paper texture */
+  .mast{
+    padding-block:52px 36px;
+    background-image:
+      repeating-linear-gradient(0deg, var(--grid) 0 1px, transparent 1px 32px),
+      repeating-linear-gradient(90deg, var(--grid) 0 1px, transparent 1px 32px);
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-size:.78rem; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--ink-soft); font-weight:600; margin-bottom:10px;
+  }
+  .mast h1{font-size:2.3rem; font-weight:600; letter-spacing:-.01em;}
+  .mast p.lede{max-width:60ch; margin-top:14px; color:var(--ink-soft); font-size:1.03rem;}
+  .totals{display:flex; gap:10px; margin-top:24px; flex-wrap:wrap;}
+  .total-pill{
+    display:flex; align-items:baseline; gap:6px;
+    background:var(--surface); border:1px solid var(--line); border-radius:100px;
+    padding:6px 16px; font-size:.9rem;
+  }
+  .total-pill b{font-family:var(--font-display); font-size:1.15rem;}
+  .total-pill.math{border-color:var(--math); color:var(--math);}
+  .total-pill.phys{border-color:var(--phys); color:var(--phys);}
+
+  nav.pills{
+    position:sticky; top:env(safe-area-inset-top, 0px); z-index:10;
+    background:color-mix(in srgb, var(--paper) 90%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.pills .wrap{display:flex; gap:8px; padding-block:10px; overflow-x:auto; scrollbar-width:none;}
+  nav.pills .wrap::-webkit-scrollbar{display:none;}
+  nav.pills a{
+    flex:none; font-size:.85rem; font-weight:600;
+    padding:6px 14px; border-radius:100px; border:1px solid var(--line);
+    text-decoration:none; color:var(--ink-soft); white-space:nowrap;
+  }
+  nav.pills a[data-active="true"][data-subj="math"]{background:var(--math); border-color:var(--math); color:#fff;}
+  nav.pills a[data-active="true"][data-subj="phys"]{background:var(--phys); border-color:var(--phys); color:#fff;}
+
+  section.subject{padding-block:44px; border-bottom:1px solid var(--line); scroll-margin-top:56px;}
+  section.subject:last-of-type{border-bottom:none;}
+  .subj-head{display:flex; align-items:center; gap:14px; margin-bottom:6px;}
+  .subj-icon{
+    width:44px; height:44px; border-radius:10px; flex:none;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-zh); font-weight:700; font-size:1.3rem; color:#fff;
+  }
+  section[data-subj="math"] .subj-icon{background:var(--math);}
+  section[data-subj="phys"] .subj-icon{background:var(--phys);}
+  .subj-title{font-size:1.5rem; font-weight:600;}
+  .subj-sub{color:var(--ink-soft); font-size:.95rem; margin:6px 0 30px; max-width:58ch;}
+
+  .group{margin-bottom:30px;}
+  .group:last-child{margin-bottom:0;}
+  .group-title{
+    font-weight:700; font-size:1.02rem; margin-bottom:14px;
+    padding-bottom:6px; border-bottom:2px solid var(--line);
+  }
+  section[data-subj="math"] .group-title{border-color:var(--math-soft); color:var(--math);}
+  section[data-subj="phys"] .group-title{border-color:var(--phys-soft); color:var(--phys);}
+
+  .cards{display:flex; flex-direction:column; gap:14px;}
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:10px;
+    padding:14px 16px; border-left:3px solid var(--line);
+  }
+  section[data-subj="math"] .card{border-left-color:var(--math);}
+  section[data-subj="phys"] .card{border-left-color:var(--phys);}
+  .card h4{font-family:var(--font-body); font-weight:700; font-size:.98rem; margin-bottom:4px;}
+  .card p{margin:0 0 8px; color:var(--ink-soft); font-size:.92rem;}
+  .card .formula{
+    font-family:var(--font-math); font-size:1.02rem; font-weight:600;
+    background:var(--math-soft); color:var(--ink);
+    border-radius:6px; padding:8px 12px; display:inline-block;
+    font-variant-numeric:tabular-nums;
+  }
+  section[data-subj="phys"] .card .formula{background:var(--phys-soft);}
+  .card .formula + .formula{margin-top:6px;}
+  .card .formula-row{display:flex; flex-direction:column; gap:6px;}
+
+  footer{padding-block:36px 60px;}
+  footer p{color:var(--ink-soft); font-size:.88rem; max-width:60ch;}
+
+  @media (max-width:480px){
+    .mast{padding-block:36px 26px;}
+    .mast h1{font-size:1.85rem;}
+    .subj-title{font-size:1.25rem;}
+  }
+</style>
+</head>
+<body>
+<nav class="toolkit-nav">
+  <div class="toolkit-nav-inner">
+    <a class="toolkit-brand" href="../">← CSC China Toolkit</a>
+    <span class="toolkit-current">Fórmulas do CSCA</span>
+  </div>
+</nav>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="eyebrow">Guia de revisão · CSCA</div>
+    <h1>Fórmulas do CSCA</h1>
+    <p class="lede">Um resumo direto do que cai em Matemática e Física, organizado exatamente pelos tópicos do edital — pra revisar rápido o que já foi visto no ensino médio, não pra aprender do zero.</p>
+    <div class="totals">
+      <div class="total-pill math">Matemática · <b>100 pts</b></div>
+      <div class="total-pill phys">Física · <b>100 pts</b></div>
+    </div>
+  </div>
+</header>
+
+<nav class="pills" id="pillNav">
+  <div class="wrap">
+    <a href="#math" data-target="math" data-subj="math">Matemática</a>
+    <a href="#phys" data-target="phys" data-subj="phys">Física</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section class="subject" id="math" data-subj="math">
+  <div class="subj-head"><div class="subj-icon">数</div><div class="subj-title">Matemática</div></div>
+  <p class="subj-sub">Quatro blocos, do mais mecânico (conjuntos, inequações) ao mais abstrato (cálculo, espacial, estatística).</p>
+
+  <div class="group">
+    <div class="group-title">Conjuntos & Inequações</div>
+    <div class="cards">
+      <div class="card">
+        <h4>Operações com conjuntos</h4>
+        <p>União, interseção, diferença e complemento — a base pra ler qualquer enunciado com notação de conjunto.</p>
+        <div class="formula-row">
+          <span class="formula">A ∪ B · A ∩ B · A − B · Aᶜ</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Inequação quadrática</h4>
+        <p>Ache as raízes, depois use o sinal da parábola (concavidade pra cima se a &gt; 0) pra saber onde é positivo ou negativo.</p>
+        <div class="formula">ax² + bx + c ≷ 0</div>
+      </div>
+      <div class="card">
+        <h4>Inequação racional</h4>
+        <p>Monte a tabela de sinais do numerador e denominador — e nunca esqueça de excluir onde o denominador zera.</p>
+        <div class="formula">P(x) / Q(x) ≷ 0, com Q(x) ≠ 0</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">Funções</div>
+    <div class="cards">
+      <div class="card">
+        <h4>Domínio, imagem, monotonicidade, paridade</h4>
+        <p>Domínio = valores de entrada válidos. Imagem = valores de saída possíveis. Par: espelha no eixo y. Ímpar: espelha na origem.</p>
+        <div class="formula-row">
+          <span class="formula">Par: f(−x) = f(x)</span>
+          <span class="formula">Ímpar: f(−x) = −f(x)</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Potência, exponencial, logarítmica, trigonométrica</h4>
+        <p>Log é a inversa da exponencial. Trigonometria: a identidade fundamental resolve metade das questões sozinha.</p>
+        <div class="formula-row">
+          <span class="formula">f(x) = xⁿ · f(x) = aˣ · f(x) = logₐx</span>
+          <span class="formula">sin²x + cos²x = 1</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Sequências aritméticas e geométricas</h4>
+        <p>Aritmética soma sempre a mesma diferença; geométrica multiplica sempre pela mesma razão.</p>
+        <div class="formula-row">
+          <span class="formula">aₙ = a₁ + (n−1)d · Sₙ = n(a₁+aₙ)/2</span>
+          <span class="formula">aₙ = a₁·rⁿ⁻¹ · Sₙ = a₁(rⁿ−1)/(r−1)</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Noções de derivada</h4>
+        <p>Derivada = inclinação da reta tangente num ponto = taxa de variação instantânea. Só o básico da regra do poder costuma cair.</p>
+        <div class="formula">d/dx [xⁿ] = n·xⁿ⁻¹</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">Geometria & Álgebra</div>
+    <div class="cards">
+      <div class="card">
+        <h4>Geometria analítica</h4>
+        <p>As cônicas todas seguem o mesmo espírito: uma equação que descreve a curva a partir do centro/foco.</p>
+        <div class="formula-row">
+          <span class="formula">Reta: y = mx + b</span>
+          <span class="formula">Círculo: (x−a)² + (y−b)² = r²</span>
+          <span class="formula">Elipse: x²/a² + y²/b² = 1</span>
+          <span class="formula">Hipérbole: x²/a² − y²/b² = 1</span>
+          <span class="formula">Parábola: y² = 4px</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Vetores</h4>
+        <p>Soma/subtração é componente a componente. Produto escalar mede o quanto dois vetores "apontam" na mesma direção.</p>
+        <div class="formula">a · b = |a||b|·cos θ</div>
+      </div>
+      <div class="card">
+        <h4>Números complexos</h4>
+        <p>i é só um número cujo quadrado é −1. Módulo é a distância até a origem no plano complexo.</p>
+        <div class="formula-row">
+          <span class="formula">z = a + bi, i² = −1</span>
+          <span class="formula">|z| = √(a² + b²)</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Geometria espacial (coordenadas no espaço)</h4>
+        <p>Mesma lógica da distância 2D, só que com um eixo z a mais.</p>
+        <div class="formula">d = √((x₂−x₁)² + (y₂−y₁)² + (z₂−z₁)²)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">Probabilidade & Estatística</div>
+    <div class="cards">
+      <div class="card">
+        <h4>Probabilidade clássica</h4>
+        <p>Casos favoráveis sobre casos possíveis — a base de tudo nessa seção.</p>
+        <div class="formula">P(evento) = casos favoráveis / casos possíveis</div>
+      </div>
+      <div class="card">
+        <h4>Média e variância</h4>
+        <p>Variância mede o quanto os dados se espalham em torno da média.</p>
+        <div class="formula-row">
+          <span class="formula">x̄ = Σxᵢ / n</span>
+          <span class="formula">σ² = Σ(xᵢ − x̄)² / n</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Distribuição normal</h4>
+        <p>A curva de sino simétrica em torno da média — regra prática: ~68% dos dados a 1 desvio padrão, ~95% a 2, ~99,7% a 3.</p>
+        <div class="formula">68 – 95 – 99,7%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="subject" id="phys" data-subj="phys">
+  <div class="subj-head"><div class="subj-icon">物</div><div class="subj-title">Física</div></div>
+  <p class="subj-sub">Cinco blocos, do clássico (mecânica) ao mais "exótico" (física moderna) — a maioria das fórmulas aqui é curta.</p>
+
+  <div class="group">
+    <div class="group-title">Mecânica</div>
+    <div class="cards">
+      <div class="card">
+        <h4>Velocidade e aceleração</h4>
+        <p>A base de tudo em cinemática — variação de posição e variação de velocidade no tempo.</p>
+        <div class="formula-row">
+          <span class="formula">v = Δx / Δt</span>
+          <span class="formula">a = Δv / Δt</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Leis de Newton</h4>
+        <p>1ª: corpo em repouso ou em movimento uniforme tende a continuar assim. 2ª: força é proporcional à aceleração. 3ª: toda ação tem uma reação de mesma intensidade e sentido oposto.</p>
+        <div class="formula">F = m·a</div>
+      </div>
+      <div class="card">
+        <h4>Momento e impulso</h4>
+        <p>Impulso é a força aplicada durante um tempo — e é exatamente igual à variação do momento.</p>
+        <div class="formula-row">
+          <span class="formula">p = m·v</span>
+          <span class="formula">J = F·Δt = Δp</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Trabalho e energia</h4>
+        <p>Trabalho só existe na direção do deslocamento — por isso o cosseno do ângulo entra na conta.</p>
+        <div class="formula-row">
+          <span class="formula">W = F·d·cos θ</span>
+          <span class="formula">Ec = ½mv² · Ep = m·g·h</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Movimento circular</h4>
+        <p>Mesmo em velocidade constante, um corpo em círculo está acelerando — porque a direção muda o tempo todo.</p>
+        <div class="formula">ac = v² / r</div>
+      </div>
+      <div class="card">
+        <h4>Movimento harmônico simples</h4>
+        <p>O clássico vai-e-volta de uma mola ou pêndulo — período depende da massa e da "rigidez" do sistema, não da amplitude.</p>
+        <div class="formula-row">
+          <span class="formula">x(t) = A·cos(ωt + φ)</span>
+          <span class="formula">T = 2π√(m/k)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">Eletromagnetismo</div>
+    <div class="cards">
+      <div class="card">
+        <h4>Lei de Coulomb</h4>
+        <p>Mesma "forma" da gravitação universal, só que com cargas em vez de massas.</p>
+        <div class="formula">F = k·q₁q₂ / r²</div>
+      </div>
+      <div class="card">
+        <h4>Lei de Ohm</h4>
+        <p>A relação mais básica de circuitos — tensão, corrente e resistência.</p>
+        <div class="formula">V = I·R</div>
+      </div>
+      <div class="card">
+        <h4>Força de Lorentz</h4>
+        <p>A força que um campo magnético exerce sobre uma carga em movimento.</p>
+        <div class="formula">F = q·v·B·sin θ</div>
+      </div>
+      <div class="card">
+        <h4>Faraday & Lenz</h4>
+        <p>Um campo magnético variando induz corrente — e o sentido dessa corrente sempre se opõe à variação que a criou.</p>
+        <div class="formula">ε = −dΦ/dt</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">Termodinâmica</div>
+    <div class="cards">
+      <div class="card">
+        <h4>Teoria molecular / cinética dos gases</h4>
+        <p>Temperatura é, na prática, uma medida da energia cinética média das partículas.</p>
+        <div class="formula">Ec média ∝ T</div>
+      </div>
+      <div class="card">
+        <h4>Equação dos gases ideais</h4>
+        <p>Liga pressão, volume, quantidade de gás e temperatura numa equação só.</p>
+        <div class="formula">P·V = n·R·T</div>
+      </div>
+      <div class="card">
+        <h4>Primeira lei da termodinâmica</h4>
+        <p>Energia interna muda pelo calor que entra menos o trabalho que o sistema realiza.</p>
+        <div class="formula">ΔU = Q − W</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">Óptica</div>
+    <div class="cards">
+      <div class="card">
+        <h4>Reflexão e refração</h4>
+        <p>Na reflexão os ângulos são iguais; na refração, a luz "dobra" ao mudar de meio, proporcional ao índice de refração de cada um.</p>
+        <div class="formula">n₁·sin θ₁ = n₂·sin θ₂</div>
+      </div>
+      <div class="card">
+        <h4>Interferência e difração</h4>
+        <p>Ondas de luz se somam ou se cancelam dependendo da diferença de percurso — é o que gera os padrões de franjas claras/escuras.</p>
+        <div class="formula">Franjas claras onde as ondas chegam em fase</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">Física Moderna</div>
+    <div class="cards">
+      <div class="card">
+        <h4>Efeito fotoelétrico</h4>
+        <p>Luz "arranca" elétrons de um material — mas só se cada fóton individual tiver energia suficiente, não importa a intensidade total.</p>
+        <div class="formula-row">
+          <span class="formula">E = h·f</span>
+          <span class="formula">Ec máx = h·f − φ</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>Estrutura atômica</h4>
+        <p>Modelo de Bohr: elétrons só existem em níveis de energia específicos, "saltando" entre eles ao emitir/absorver luz.</p>
+        <div class="formula">Níveis de energia discretos</div>
+      </div>
+      <div class="card">
+        <h4>Física nuclear</h4>
+        <p>Núcleos instáveis decaem espontaneamente; meia-vida é o tempo pra metade de uma amostra decair.</p>
+        <div class="formula">E = m·c²</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <p>Resumo de revisão baseado no edital do CSCA — pensado pra reativar o que você já viu no ensino médio, não como curso completo. Depois de revisar cada bloco, o próximo passo é treinar com questões de verdade (simulados) pra pegar o ritmo de tempo da prova.</p>
+</footer>
+
+<script>
+(function(){
+  try{
+    var sections = Array.prototype.slice.call(document.querySelectorAll('section.subject'));
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.pills a'));
+    function setActive(id){
+      links.forEach(function(a){ a.dataset.active = (a.dataset.target === id) ? "true" : "false"; });
+    }
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ if(e.isIntersecting){ setActive(e.target.id); } });
+      }, {rootMargin:"-40% 0px -55% 0px"});
+      sections.forEach(function(s){ io.observe(s); });
+    }
+    if(links[0]) links[0].dataset.active = "true";
+  }catch(e){}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa Gramatical HSK · CSC China Toolkit</title>
+<meta name="description" content="Guia de referência com as estruturas gramaticais do HSK 1 ao 5, com exemplos em chinês, pinyin e português.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+  /* ============ TOKENS ============ */
+  :root{
+    --paper:#f4f3ef;
+    --surface:#ffffff;
+    --ink:#1d201d;
+    --ink-soft:#5c625b;
+    --line:#ddd8cd;
+    --note-bg:#fbf1de;
+    --note-ink:#7a5a12;
+    --note-line:#e6cf9e;
+
+    --l1:#8fb0d1; --l1-ink:#2c4257;
+    --l2:#5f8fbd; --l2-ink:#1e3348;
+    --l3:#3d6fa0; --l3-ink:#15263a;
+    --l4:#2a5480; --l4-ink:#0f1f30;
+    --l5:#173a5e; --l5-ink:#0a1a2b;
+
+    --focus:#3d6fa0;
+    --font-display:"Fraunces", Georgia, serif;
+    --font-body:"Source Sans 3", -apple-system, sans-serif;
+    --font-zh:"Noto Sans SC", "PingFang SC", sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#17171a;
+      --surface:#1f1f22;
+      --ink:#e8e7e2;
+      --ink-soft:#9d9c96;
+      --line:#2e2e31;
+      --note-bg:#2a2413;
+      --note-ink:#e0bb6a;
+      --note-line:#4a3d1c;
+
+      --l1:#a9c6e2; --l1-ink:#0f171e;
+      --l2:#87aed6; --l2-ink:#0f171e;
+      --l3:#6293c4; --l3-ink:#0a1117;
+      --l4:#4b78a8; --l4-ink:#eef2f5;
+      --l5:#345c85; --l5-ink:#eef2f5;
+
+      --focus:#87aed6;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#17171a;
+    --surface:#1f1f22;
+    --ink:#e8e7e2;
+    --ink-soft:#9d9c96;
+    --line:#2e2e31;
+    --note-bg:#2a2413;
+    --note-ink:#e0bb6a;
+    --note-line:#4a3d1c;
+
+    --l1:#a9c6e2; --l1-ink:#0f171e;
+    --l2:#87aed6; --l2-ink:#0f171e;
+    --l3:#6293c4; --l3-ink:#0a1117;
+    --l4:#4b78a8; --l4-ink:#eef2f5;
+    --l5:#345c85; --l5-ink:#eef2f5;
+
+    --focus:#87aed6;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  .toolkit-nav{background:var(--surface); border-bottom:1px solid var(--line);}
+  .toolkit-nav-inner{max-width:820px; margin:0 auto; padding:13px 20px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .toolkit-brand{font-size:.78rem; font-weight:700; letter-spacing:.03em; color:var(--ink-soft); text-decoration:none;}
+  .toolkit-brand:hover{color:var(--ink);}
+  .toolkit-current{font-family:var(--font-body); font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-soft);}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  :focus-visible{outline:2px solid var(--focus); outline-offset:2px;}
+  h1,h2,h3{font-family:var(--font-display); text-wrap:balance; margin:0;}
+  a{color:inherit;}
+  .wrap{max-width:760px; margin:0 auto; padding-inline:20px;}
+
+  /* ============ MASTHEAD ============ */
+  .mast{
+    padding-block:56px 40px;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 39px, var(--line) 39px 40px),
+      repeating-linear-gradient(90deg, transparent 0 39px, var(--line) 39px 40px);
+    background-size:40px 40px;
+    background-position:center top;
+    border-bottom:1px solid var(--line);
+    position:relative;
+  }
+  .mast::before{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, var(--paper) 0%, color-mix(in srgb, var(--paper) 65%, transparent) 55%, var(--paper) 100%);
+    pointer-events:none;
+  }
+  .mast .wrap{position:relative;}
+  .eyebrow{
+    font-size:.78rem; letter-spacing:.09em; text-transform:uppercase;
+    color:var(--ink-soft); font-weight:600; margin-bottom:10px;
+  }
+  .mast h1{font-size:2.4rem; font-weight:600; letter-spacing:-.01em;}
+  .mast h1 .zh{font-family:var(--font-zh); font-weight:700; color:var(--l4);}
+  .mast p.lede{
+    max-width:60ch; margin-top:14px; color:var(--ink-soft); font-size:1.05rem;
+  }
+  .ramp{display:flex; gap:6px; margin-top:22px;}
+  .ramp span{
+    flex:1; height:6px; border-radius:3px;
+  }
+  .ramp span:nth-child(1){background:var(--l1);}
+  .ramp span:nth-child(2){background:var(--l2);}
+  .ramp span:nth-child(3){background:var(--l3);}
+  .ramp span:nth-child(4){background:var(--l4);}
+  .ramp span:nth-child(5){background:var(--l5);}
+
+  /* ============ NAV ============ */
+  nav.pills{
+    position:sticky; top:env(safe-area-inset-top, 0px);
+    z-index:10;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav.pills .wrap{
+    display:flex; gap:8px; padding-block:10px; overflow-x:auto;
+    scrollbar-width:none;
+  }
+  nav.pills .wrap::-webkit-scrollbar{display:none;}
+  nav.pills a{
+    flex:none;
+    font-size:.85rem; font-weight:600;
+    padding:6px 14px; border-radius:100px;
+    border:1px solid var(--line);
+    text-decoration:none;
+    color:var(--ink-soft);
+    white-space:nowrap;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  nav.pills a[data-active="true"]{
+    background:var(--l3); border-color:var(--l3); color:#fff;
+  }
+
+  /* ============ LEVEL SECTIONS ============ */
+  section.level{
+    padding-block:44px;
+    border-bottom:1px solid var(--line);
+    scroll-margin-top:56px;
+  }
+  section.level:last-of-type{border-bottom:none;}
+  .lvl-head{display:flex; align-items:baseline; gap:16px; margin-bottom:6px;}
+  .lvl-num{
+    font-family:var(--font-display); font-weight:700; font-size:2.6rem;
+    line-height:1;
+  }
+  .lvl-title{font-size:1.4rem; font-weight:600;}
+  .lvl-sub{color:var(--ink-soft); font-size:.95rem; margin:6px 0 28px; max-width:58ch;}
+
+  section.level[data-lvl="1"] .lvl-num{color:var(--l1);}
+  section.level[data-lvl="2"] .lvl-num{color:var(--l2);}
+  section.level[data-lvl="3"] .lvl-num{color:var(--l3);}
+  section.level[data-lvl="4"] .lvl-num{color:var(--l4);}
+  section.level[data-lvl="5"] .lvl-num{color:var(--l5);}
+
+  .items{display:flex; flex-direction:column; gap:26px;}
+  .item{
+    padding-left:16px;
+    border-left:3px solid var(--line);
+  }
+  section.level[data-lvl="1"] .item{border-left-color:var(--l1);}
+  section.level[data-lvl="2"] .item{border-left-color:var(--l2);}
+  section.level[data-lvl="3"] .item{border-left-color:var(--l3);}
+  section.level[data-lvl="4"] .item{border-left-color:var(--l4);}
+  section.level[data-lvl="5"] .item{border-left-color:var(--l5);}
+
+  .pattern{
+    font-weight:700; font-size:1.05rem; margin-bottom:4px;
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+  }
+  .badge{
+    font-size:.68rem; font-weight:700; letter-spacing:.03em;
+    color:var(--note-ink); background:var(--note-bg);
+    border:1px solid var(--note-line);
+    padding:1px 8px; border-radius:100px; text-transform:uppercase;
+  }
+  .explain{color:var(--ink-soft); font-size:.96rem; margin-bottom:10px;}
+  .example{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:12px 14px;
+    display:flex; flex-direction:column; gap:3px;
+  }
+  .example .zh{font-family:var(--font-zh); font-size:1.15rem; font-weight:500;}
+  .example .py{font-style:italic; color:var(--ink-soft); font-size:.9rem;}
+  .example .pt{font-size:.92rem;}
+  .example .pt::before{content:"→ "; color:var(--ink-soft);}
+
+  /* ============ FOOT ============ */
+  footer{padding-block:40px 64px;}
+  footer p{color:var(--ink-soft); font-size:.88rem; max-width:60ch;}
+  footer .note{
+    margin-top:18px; padding:12px 14px; border-radius:8px;
+    background:var(--note-bg); border:1px solid var(--note-line);
+    color:var(--note-ink); font-size:.88rem; max-width:60ch;
+  }
+
+  @media (max-width:480px){
+    .mast{padding-block:40px 28px;}
+    .mast h1{font-size:1.9rem;}
+    .lvl-num{font-size:2.1rem;}
+  }
+</style>
+</head>
+<body>
+<nav class="toolkit-nav">
+  <div class="toolkit-nav-inner">
+    <a class="toolkit-brand" href="../">← CSC China Toolkit</a>
+    <span class="toolkit-current">Mapa Gramatical HSK</span>
+  </div>
+</nav>
+
+<header class="mast">
+  <div class="wrap">
+    <div class="eyebrow">Guia de referência · autoestudo</div>
+    <h1>Mapa Gramatical <span class="zh">语法</span> HSK</h1>
+    <p class="lede">Toda a progressão de estruturas de frase do HSK 1 ao 5, em ordem de complexidade — do sujeito-verbo-objeto básico até os conectores formais de texto escrito.</p>
+    <div class="ramp"><span></span><span></span><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<nav class="pills" id="pillNav">
+  <div class="wrap">
+    <a href="#hsk1" data-target="hsk1">HSK 1</a>
+    <a href="#hsk2" data-target="hsk2">HSK 2</a>
+    <a href="#hsk3" data-target="hsk3">HSK 3</a>
+    <a href="#hsk4" data-target="hsk4">HSK 4</a>
+    <a href="#hsk5" data-target="hsk5">HSK 5</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section class="level" id="hsk1" data-lvl="1">
+  <div class="lvl-head"><span class="lvl-num">1</span><span class="lvl-title">Fundamentos</span></div>
+  <p class="lvl-sub">A base: como uma frase chinesa se monta sem verbo "ser" fixo, sem conjugação e sem plural.</p>
+  <div class="items">
+    <div class="item">
+      <div class="pattern">Ordem básica: Sujeito + Verbo + Objeto</div>
+      <p class="explain">A ordem não muda com tempo verbal nem sujeito — o verbo nunca se conjuga.</p>
+      <div class="example"><div class="zh">我喝水。</div><div class="py">Wǒ hē shuǐ.</div><div class="pt">Eu bebo água.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">是 — "A é B"</div>
+      <p class="explain">Liga dois substantivos ou pronomes. Não é usado antes de adjetivo.</p>
+      <div class="example"><div class="zh">他是老师。</div><div class="py">Tā shì lǎoshī.</div><div class="pt">Ele é professor.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">有 — posse e existência</div>
+      <p class="explain">Serve tanto para "ter algo" quanto para "existir algo em um lugar".</p>
+      <div class="example"><div class="zh">我有一个哥哥。</div><div class="py">Wǒ yǒu yí gè gēge.</div><div class="pt">Eu tenho um irmão mais velho.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Adjetivo como predicado</div>
+      <p class="explain">Adjetivo já funciona como o predicado da frase — não se usa 是 antes dele.</p>
+      <div class="example"><div class="zh">天气很好。</div><div class="py">Tiānqì hěn hǎo.</div><div class="pt">O tempo está bom.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">的 — posse</div>
+      <p class="explain">Equivale ao "de" possessivo do português, mas vem antes do substantivo.</p>
+      <div class="example"><div class="zh">这是我的书。</div><div class="py">Zhè shì wǒ de shū.</div><div class="pt">Este é o meu livro.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Perguntas: 吗 · 谁 · 什么 · 哪 · 几 · 多少</div>
+      <p class="explain">吗 transforma afirmação em pergunta de sim/não; os outros substituem a informação perguntada, na mesma posição que ela ocuparia na resposta.</p>
+      <div class="example"><div class="zh">你叫什么名字?</div><div class="py">Nǐ jiào shénme míngzi?</div><div class="pt">Qual é o seu nome?</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Tempo e lugar antes do verbo</div>
+      <p class="explain">Diferente do português, expressões de tempo e lugar vêm antes do verbo, nunca depois.</p>
+      <div class="example"><div class="zh">我今天在家学习。</div><div class="py">Wǒ jīntiān zài jiā xuéxí.</div><div class="pt">Hoje eu estudo em casa.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="level" id="hsk2" data-lvl="2">
+  <div class="lvl-head"><span class="lvl-num">2</span><span class="lvl-title">Tempo, aspecto e comparação simples</span></div>
+  <p class="lvl-sub">A frase passa a marcar quando e como a ação acontece, e a comparar duas coisas.</p>
+  <div class="items">
+    <div class="item">
+      <div class="pattern">了 — ação concluída ou mudança de estado</div>
+      <p class="explain">Marca que algo já aconteceu ou que uma situação mudou — não é "passado" no sentido europeu.</p>
+      <div class="example"><div class="zh">我吃了饭。</div><div class="py">Wǒ chī le fàn.</div><div class="pt">Eu já comi.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">在 — ação em progresso</div>
+      <p class="explain">Antes do verbo, indica que a ação está acontecendo agora.</p>
+      <div class="example"><div class="zh">他在看电视。</div><div class="py">Tā zài kàn diànshì.</div><div class="pt">Ele está assistindo TV.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">要 / 想 — vontade e futuro</div>
+      <p class="explain">想 é mais um desejo; 要 soa mais como uma intenção decidida.</p>
+      <div class="example"><div class="zh">我要去中国。</div><div class="py">Wǒ yào qù Zhōngguó.</div><div class="pt">Eu vou (pretendo) ir à China.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">比 — comparação</div>
+      <p class="explain">A ordem é fixa: A 比 B + adjetivo.</p>
+      <div class="example"><div class="zh">今天比昨天冷。</div><div class="py">Jīntiān bǐ zuótiān lěng.</div><div class="pt">Hoje está mais frio que ontem.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">因为...所以... — causa e efeito</div>
+      <p class="explain">Os dois lados costumam aparecer juntos, ao contrário do "porque" isolado do português.</p>
+      <div class="example"><div class="zh">因为下雨,所以我没出门。</div><div class="py">Yīnwèi xiàyǔ, suǒyǐ wǒ méi chūmén.</div><div class="pt">Como choveu, eu não saí.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Complemento direcional simples: 来 / 去</div>
+      <p class="explain">Marca se o movimento é em direção a quem fala (来) ou para longe (去).</p>
+      <div class="example"><div class="zh">请进来。</div><div class="py">Qǐng jìnlái.</div><div class="pt">Por favor, entre.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">有点儿 × 一点儿</div>
+      <p class="explain">有点儿 vem antes do adjetivo e costuma soar negativo; 一点儿 vem depois e é neutro/positivo.</p>
+      <div class="example"><div class="zh">这个有点儿贵,便宜一点儿吧。</div><div class="py">Zhège yǒudiǎnr guì, piányi yìdiǎnr ba.</div><div class="pt">Isso está um pouco caro, faz um pouco mais barato.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Duração e frequência</div>
+      <p class="explain">A duração vem depois do verbo (e do objeto, quando repetido).</p>
+      <div class="example"><div class="zh">我学了两个小时。</div><div class="py">Wǒ xué le liǎng gè xiǎoshí.</div><div class="pt">Eu estudei por duas horas.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="level" id="hsk3" data-lvl="3">
+  <div class="lvl-head"><span class="lvl-num">3</span><span class="lvl-title">Orações compostas e pares que confundem</span></div>
+  <p class="lvl-sub">Entra 把/被, complementos depois do verbo, e os pares gramaticais que mais derrubam quem fala português.</p>
+  <div class="items">
+    <div class="item">
+      <div class="pattern">把 — frase com objeto deslocado (básica)</div>
+      <p class="explain">Usada quando se quer destacar o que aconteceu com um objeto específico. Ordem: sujeito + 把 + objeto + verbo + resultado.</p>
+      <div class="example"><div class="zh">我把书放在桌子上。</div><div class="py">Wǒ bǎ shū fàng zài zhuōzi shàng.</div><div class="pt">Eu coloquei o livro em cima da mesa.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">被 — voz passiva (básica)</div>
+      <p class="explain">Usada sobretudo quando o resultado é indesejado ou inesperado.</p>
+      <div class="example"><div class="zh">杯子被打破了。</div><div class="py">Bēizi bèi dǎpò le.</div><div class="pt">O copo foi quebrado.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Complemento de grau: 得</div>
+      <p class="explain">Liga o verbo a uma descrição de como a ação é feita.</p>
+      <div class="example"><div class="zh">他跑得很快。</div><div class="py">Tā pǎo de hěn kuài.</div><div class="pt">Ele corre muito rápido.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Complemento de resultado</div>
+      <p class="explain">Um segundo verbo/adjetivo grudado no primeiro mostra o resultado da ação.</p>
+      <div class="example"><div class="zh">我听懂了。</div><div class="py">Wǒ tīng dǒng le.</div><div class="pt">Eu entendi (de ouvido).</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Complemento direcional composto</div>
+      <p class="explain">Combina direção (进/出/上/下...) com 来/去 pra mostrar a trajetória completa do movimento.</p>
+      <div class="example"><div class="zh">他走进来了。</div><div class="py">Tā zǒu jìnlái le.</div><div class="pt">Ele entrou andando.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">虽然...但是... / 如果...就...</div>
+      <p class="explain">Concessão e condição — a segunda oração é sempre a consequência ou o contraste.</p>
+      <div class="example"><div class="zh">虽然很累,但是很开心。</div><div class="py">Suīrán hěn lèi, dànshì hěn kāixīn.</div><div class="pt">Apesar de estar cansado, estou feliz.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Reduplicação de verbo</div>
+      <p class="explain">Repetir o verbo suaviza a ação — "dar uma olhada" em vez de "olhar".</p>
+      <div class="example"><div class="zh">你看看这个。</div><div class="py">Nǐ kànkan zhège.</div><div class="pt">Dá uma olhada nisso.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">越来越... / 越...越...</div>
+      <p class="explain">越来越 marca progressão simples ao longo do tempo; 越...越... liga duas coisas que aumentam juntas.</p>
+      <div class="example"><div class="zh">天气越来越冷,他越学越有兴趣。</div><div class="py">Tiānqì yuè lái yuè lěng, tā yuè xué yuè yǒu xìngqù.</div><div class="pt">O tempo está cada vez mais frio; quanto mais ele estuda, mais interesse tem.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">过 × 了</div>
+      <p class="explain">过 marca experiência de vida ("já fiz alguma vez"); 了 marca um fato concluído, geralmente uma vez específica.</p>
+      <div class="example"><div class="zh">我去过北京,但没去过上海。</div><div class="py">Wǒ qùguo Běijīng, dàn méi qùguo Shànghǎi.</div><div class="pt">Eu já fui a Pequim, mas nunca fui a Xangai.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">才 × 就</div>
+      <p class="explain">就 = rápido, fácil, no prazo; 才 = demorado, difícil, atrasado.</p>
+      <div class="example"><div class="zh">他六点就到了,我八点才到。</div><div class="py">Tā liù diǎn jiù dào le, wǒ bā diǎn cái dào.</div><div class="pt">Ele já chegou às seis; eu só cheguei às oito.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">又 × 再</div>
+      <p class="explain">又 = repetição que já aconteceu; 再 = repetição no futuro ou num pedido/plano.</p>
+      <div class="example"><div class="zh">他昨天又迟到了,明天别再迟到。</div><div class="py">Tā zuótiān yòu chídào le, míngtiān bié zài chídào.</div><div class="pt">Ele se atrasou de novo ontem; não se atrase de novo amanhã.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">更 / 最 — comparativo e superlativo</div>
+      <p class="explain">更 compara duas coisas; 最 marca o grau máximo dentro de um grupo.</p>
+      <div class="example"><div class="zh">这个更好,那个最好。</div><div class="py">Zhège gèng hǎo, nàge zuì hǎo.</div><div class="pt">Este é melhor, aquele é o melhor.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="level" id="hsk4" data-lvl="4">
+  <div class="lvl-head"><span class="lvl-num">4</span><span class="lvl-title">Conectores e matizes</span></div>
+  <p class="lvl-sub">As estruturas de HSK3 ganham camadas — condição exclusiva, simultaneidade, ênfase e ironia.</p>
+  <div class="items">
+    <div class="item">
+      <div class="pattern">把 / 被 mais elaborados</div>
+      <p class="explain">Agora aparecem com complementos de resultado, direção ou grau já embutidos.</p>
+      <div class="example"><div class="zh">他把作业做完了。</div><div class="py">Tā bǎ zuòyè zuò wán le.</div><div class="pt">Ele terminou de fazer a lição de casa.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">是...的 — ênfase em quando/como/onde</div>
+      <p class="explain">Usado para destacar uma circunstância de algo que já aconteceu — não é o mesmo 是 de identidade.</p>
+      <div class="example"><div class="zh">我是昨天来的。</div><div class="py">Wǒ shì zuótiān lái de.</div><div class="pt">Foi ontem que eu vim.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">一边...一边... — simultaneidade</div>
+      <p class="explain">Duas ações feitas ao mesmo tempo pela mesma pessoa.</p>
+      <div class="example"><div class="zh">他一边吃饭一边看手机。</div><div class="py">Tā yìbiān chīfàn yìbiān kàn shǒujī.</div><div class="pt">Ele come enquanto mexe no celular.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">不但...而且... — progressão</div>
+      <p class="explain">A segunda parte sempre soma algo à primeira, nunca contradiz.</p>
+      <div class="example"><div class="zh">她不但聪明,而且努力。</div><div class="py">Tā búdàn cōngmíng, érqiě nǔlì.</div><div class="pt">Ela não é só inteligente, mas também esforçada.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">只有...才... — condição exclusiva</div>
+      <p class="explain">Mais forte que "se": só existe um caminho possível pro resultado.</p>
+      <div class="example"><div class="zh">只有努力,才能成功。</div><div class="py">Zhǐyǒu nǔlì, cái néng chénggōng.</div><div class="pt">Só com esforço é que se consegue ter sucesso.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">除了...以外... — exceção ou adição</div>
+      <p class="explain">O sentido (só isso, ou além disso) depende de 还/也 aparecer depois.</p>
+      <div class="example"><div class="zh">除了中文,他还会英语。</div><div class="py">Chúle Zhōngwén yǐwài, tā hái huì Yīngyǔ.</div><div class="pt">Além do chinês, ele também sabe inglês.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Complemento de possibilidade</div>
+      <p class="explain">得/不 entre verbo e resultado mostra se a ação é (ou não) realizável.</p>
+      <div class="example"><div class="zh">这个字我看得懂。</div><div class="py">Zhège zì wǒ kàn de dǒng.</div><div class="pt">Eu consigo entender este caractere.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">难道...吗 — pergunta retórica</div>
+      <p class="explain">Não pede resposta — expressa surpresa ou reprovação.</p>
+      <div class="example"><div class="zh">难道你不知道吗?</div><div class="py">Nándào nǐ bù zhīdào ma?</div><div class="pt">Será que você não sabia?</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">不管...都... — independente de</div>
+      <p class="explain">O resultado se mantém qualquer que seja a condição citada.</p>
+      <div class="example"><div class="zh">不管天气怎么样,我们都要去。</div><div class="py">Bùguǎn tiānqì zěnmeyàng, wǒmen dōu yào qù.</div><div class="pt">Independente do tempo, nós vamos assim mesmo.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="level" id="hsk5" data-lvl="5">
+  <div class="lvl-head"><span class="lvl-num">5</span><span class="lvl-title">Registro formal e escrito (书面语)</span></div>
+  <p class="lvl-sub">A gramática deixa de ser só conector de fala e passa a cobrar o registro de texto formal — o que mais aparece na leitura e na redação da prova.</p>
+  <div class="items">
+    <div class="item">
+      <div class="pattern">无论...都... / 除非...否则...</div>
+      <p class="explain">无论 elimina qualquer exceção; 除非...否则... marca a única condição que evitaria o resultado.</p>
+      <div class="example"><div class="zh">无论多难,我们都要坚持。</div><div class="py">Wúlùn duō nán, wǒmen dōu yào jiānchí.</div><div class="pt">Não importa quão difícil seja, temos que persistir.</div></div>
+      <div class="example" style="margin-top:8px;"><div class="zh">除非你道歉,否则我不会原谅你。</div><div class="py">Chúfēi nǐ dàoqiàn, fǒuzé wǒ bú huì yuánliàng nǐ.</div><div class="pt">A menos que você se desculpe, eu não vou te perdoar.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">宁可...也(不)... — preferência forçada</div>
+      <p class="explain">Escolhe o "mal menor" entre duas opções ruins.</p>
+      <div class="example"><div class="zh">我宁可加班,也不想拖延。</div><div class="py">Wǒ nìngkě jiābān, yě bù xiǎng tuōyán.</div><div class="pt">Prefiro trabalhar até mais tarde a deixar pra depois.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Nominalização com 所</div>
+      <p class="explain">所 + verbo transforma a ação em algo que pode ser sujeito ou objeto da frase — típico de texto escrito.</p>
+      <div class="example"><div class="zh">他所说的话让人感动。</div><div class="py">Tā suǒ shuō de huà ràng rén gǎndòng.</div><div class="pt">O que ele disse comoveu as pessoas.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Discurso indireto</div>
+      <p class="explain">说/表示 + oração, sem aspas nem mudança de estrutura como em português.</p>
+      <div class="example"><div class="zh">他说他明天会来。</div><div class="py">Tā shuō tā míngtiān huì lái.</div><div class="pt">Ele disse que viria amanhã.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Conectores formais: 由于 · 甚至 · 以至于 · 从而</div>
+      <p class="explain">由于 (causa formal), 甚至 (até mesmo), 以至于 (a ponto de), 从而 (e assim) — a espinha dorsal dos textos de leitura do HSK5.</p>
+      <div class="example"><div class="zh">由于时间不够,他甚至没吃饭,以至于生病了。</div><div class="py">Yóuyú shíjiān bú gòu, tā shènzhì méi chīfàn, yǐzhìyú shēngbìng le.</div><div class="pt">Por falta de tempo, ele nem comeu, a ponto de ficar doente.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">Complementos compostos (把 + grau)</div>
+      <p class="explain">As estruturas do HSK3-4 se combinam numa frase só, mais densa.</p>
+      <div class="example"><div class="zh">他把问题解释得很清楚。</div><div class="py">Tā bǎ wèntí jiěshì de hěn qīngchu.</div><div class="pt">Ele explicou o problema com muita clareza.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">成语 — expressões de quatro caracteres</div>
+      <p class="explain">Passam a aparecer integrados na gramática da frase, não só como vocabulário isolado.</p>
+      <div class="example"><div class="zh">他做事一丝不苟。</div><div class="py">Tā zuòshì yìsībùgǒu.</div><div class="pt">Ele faz as coisas com todo o rigor.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">无 / 非 / 未 / 莫 — negação formal <span class="badge">frequente na leitura do 5</span></div>
+      <p class="explain">Substitutos formais de 不/没有: 无论 (não importa), 毫无 (sem nenhum), 尚未 (ainda não), 莫 (não, em tom clássico).</p>
+      <div class="example"><div class="zh">无论是谁,尚未完成的人都要留下来。</div><div class="py">Wúlùn shì shéi, shàngwèi wánchéng de rén dōu yào liú xiàlái.</div><div class="pt">Seja quem for, quem ainda não terminou tem que ficar.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">以 formal: 以便 · 以至于</div>
+      <p class="explain">以便 (a fim de que) introduz uma finalidade; já apareceu acima em 以至于 (a ponto de).</p>
+      <div class="example"><div class="zh">请提前到,以便准备。</div><div class="py">Qǐng tíqián dào, yǐbiàn zhǔnbèi.</div><div class="pt">Chegue mais cedo, para poder se preparar.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">哪怕...也... — concessão extrema</div>
+      <p class="explain">Mais forte que 虽然: mesmo no pior cenário hipotético, o resultado não muda.</p>
+      <div class="example"><div class="zh">哪怕失败,他也不放弃。</div><div class="py">Nǎpà shībài, tā yě bú fàngqì.</div><div class="pt">Mesmo que fracasse, ele não desiste.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">毕竟 — "afinal"</div>
+      <p class="explain">Justifica algo lembrando um fato que não pode ser ignorado.</p>
+      <div class="example"><div class="zh">他毕竟是新来的,还不熟悉规矩。</div><div class="py">Tā bìjìng shì xīnlái de, hái bù shúxī guīju.</div><div class="pt">Afinal ele é novo, ainda não conhece bem as regras.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">与其...不如... — preferência comparativa</div>
+      <p class="explain">Compara duas ações e recomenda a segunda.</p>
+      <div class="example"><div class="zh">与其等待,不如主动去问。</div><div class="py">Yǔqí děngdài, bùrú zhǔdòng qù wèn.</div><div class="pt">Em vez de esperar, é melhor ir perguntar por conta própria.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">难免 — "inevitável" <span class="badge">frequente na leitura do 5</span></div>
+      <p class="explain">Suaviza uma crítica ou erro, tratando-o como natural.</p>
+      <div class="example"><div class="zh">刚开始难免会犯错误。</div><div class="py">Gāng kāishǐ nánmiǎn huì fàn cuòwù.</div><div class="pt">No começo é inevitável cometer erros.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">干脆 — "simplesmente"</div>
+      <p class="explain">Marca uma decisão direta, sem meio-termo.</p>
+      <div class="example"><div class="zh">他干脆不去了。</div><div class="py">Tā gāncuì bú qù le.</div><div class="pt">Ele simplesmente decidiu não ir.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">由...决定 / 组成 — determinação e composição <span class="badge">frequente na leitura do 5</span></div>
+      <p class="explain">Estrutura passiva-formal: "X é determinado/composto por Y".</p>
+      <div class="example"><div class="zh">结果由努力决定。</div><div class="py">Jiéguǒ yóu nǔlì juédìng.</div><div class="pt">O resultado é determinado pelo esforço.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">出于... — motivado por <span class="badge">frequente na leitura do 5</span></div>
+      <p class="explain">Introduz a motivação por trás de uma ação, em tom formal.</p>
+      <div class="example"><div class="zh">他出于好奇问了这个问题。</div><div class="py">Tā chūyú hàoqí wènle zhège wèntí.</div><div class="pt">Ele fez essa pergunta por curiosidade.</div></div>
+    </div>
+    <div class="item">
+      <div class="pattern">基于... — com base em <span class="badge">frequente na leitura do 5</span></div>
+      <p class="explain">Introduz o fundamento de uma decisão ou conclusão.</p>
+      <div class="example"><div class="zh">基于这些数据,我们做出了决定。</div><div class="py">Jīyú zhèxiē shùjù, wǒmen zuò chū le juédìng.</div><div class="pt">Com base nesses dados, tomamos a decisão.</div></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">
+  <p>Guia de referência para autoestudo, organizado por nível de complexidade crescente. Frases de exemplo são originais, criadas só pra ilustrar cada estrutura.</p>
+  <p class="note">Os itens marcados "frequente na leitura do 5" são catalogados oficialmente como gramática de HSK6, mas aparecem com frequência nos textos de leitura e nos modelos de redação do HSK5 — vale a pena já reconhecê-los.</p>
+</footer>
+
+<script>
+(function(){
+  try{
+    var sections = Array.prototype.slice.call(document.querySelectorAll('section.level'));
+    var links = Array.prototype.slice.call(document.querySelectorAll('nav.pills a'));
+    function setActive(id){
+      links.forEach(function(a){ a.dataset.active = (a.dataset.target === id) ? "true" : "false"; });
+    }
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){ setActive(e.target.id); }
+        });
+      }, {rootMargin:"-40% 0px -55% 0px"});
+      sections.forEach(function(s){ io.observe(s); });
+    }
+    if(links[0]) links[0].dataset.active = "true";
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
